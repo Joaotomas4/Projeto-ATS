@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>History.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">GrupoTP-37</a> &gt; <a href="index.source.html" class="el_package">org.spotifumtp37.model.user</a> &gt; <span class="el_source">History.java</span></div><h1>History.java</h1><pre class="source lang-java linenums">package org.spotifumtp37.model.user;
+
+import org.spotifumtp37.model.album.Song;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+/**
+ * Represents a record of a song played by a user at a specific time.
+ * This class is serializable, allowing its state to be saved and restored.
+ */
+public class History implements Serializable {
+    /**
+     * The song that was played.
+     */
+    private Song song;
+    /**
+     * The date and time when the song was played.
+     */
+    private LocalDateTime time;
+
+    /**
+     * Constructs a new History record.
+     *
+     * @param song The song that was played.
+     * @param time The date and time the song was played.
+     */
+<span class="fc" id="L29">    public History(Song song, LocalDateTime time) {</span>
+<span class="fc" id="L30">        this.song = song;</span>
+<span class="fc" id="L31">        this.time = time;</span>
+<span class="fc" id="L32">    }</span>
+
+    /**
+     * Default constructor for History.
+     * Initializes song and time to null.
+     */
+<span class="fc" id="L38">    public History() {</span>
+<span class="fc" id="L39">        this.time = null;</span>
+<span class="fc" id="L40">        this.song = null;</span>
+<span class="fc" id="L41">    }</span>
+
+    /**
+     * Copy constructor for History.
+     * Creates a new History object by cloning another History object.
+     * The song is cloned to ensure a deep copy.
+     *
+     * @param other The History object to clone.
+     */
+<span class="fc" id="L50">    public History(History other) {</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        this.song = other.song != null ? other.song.clone() : null;</span>
+<span class="fc" id="L52">        this.time = other.getTime();</span>
+<span class="fc" id="L53">    }</span>
+
+    /**
+     * Gets the time the song was played.
+     *
+     * @return The {@link LocalDateTime} representing when the song was played.
+     */
+    public LocalDateTime getTime() {
+<span class="fc" id="L61">        return this.time;</span>
+    }
+
+    /**
+     * Sets the time the song was played.
+     *
+     * @param time The {@link LocalDateTime} to set as the playback time.
+     */
+    public void setTime(LocalDateTime time) {
+<span class="fc" id="L70">        this.time = time;</span>
+<span class="fc" id="L71">    }</span>
+
+    /**
+     * Gets the song that was played.
+     * Returns a clone of the song to maintain encapsulation.
+     *
+     * @return A clone of the {@link Song} object, or null if no song is set.
+     */
+    public Song getSong() {
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        return this.song != null ? this.song.clone() : null;</span>
+    }
+
+    /**
+     * Sets the song that was played.
+     * Stores a reference to the provided song, not a deep copy.
+     *
+     * @param song The {@link Song} to set.
+     */
+    public void setSong(Song song) {
+        // Store the reference, not a deep copy
+<span class="fc" id="L91">        this.song = song;</span>
+<span class="fc" id="L92">    }</span>
+
+    /**
+     * Returns a string representation of the History object.
+     *
+     * @return A string containing the song and time of playback.
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L101">        return &quot;History{&quot; +</span>
+                &quot;song=&quot; + song +
+                &quot;, time=&quot; + time +
+                '}';
+    }
+
+    /**
+     * Compares this History object to another object for equality.
+     * Two History objects are considered equal if their song and time are equal.
+     *
+     * @param o The object to compare with this History object.
+     * @return {@code true} if the given object is a History object and has the same song and time; {@code false} otherwise.
+     */
+    @Override
+    public boolean equals(Object o) {
+<span class="fc bfc" id="L116" title="All 4 branches covered.">        if (o == null || getClass() != o.getClass()) return false;</span>
+<span class="fc" id="L117">        History history = (History) o;</span>
+<span class="fc bfc" id="L118" title="All 4 branches covered.">        return Objects.equals(song, history.song) &amp;&amp; Objects.equals(time, history.time);</span>
+    }
+
+    /**
+     * Returns a hash code value for the History object.
+     * The hash code is based on the song and time.
+     *
+     * @return A hash code value for this object.
+     */
+    @Override
+    public int hashCode() {
+<span class="fc" id="L129">        return Objects.hash(song, time);</span>
+    }
+
+    /**
+     * Creates and returns a deep copy of this History object.
+     *
+     * @return A clone of this History instance.
+     */
+    @Override
+    public History clone() {
+<span class="fc" id="L139">        return new History(this);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

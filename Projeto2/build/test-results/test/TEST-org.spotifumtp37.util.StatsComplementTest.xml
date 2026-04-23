@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.spotifumtp37.util.StatsComplementTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-04-20T11:27:50" hostname="joao-ASUS-TUF-Dash-F15-FX517ZE-FX517ZE" time="0.007">
+  <properties/>
+  <testcase name="getTopListenerFromDateWithNoHistoryAfterCutoff()" classname="org.spotifumtp37.util.StatsComplementTest" time="0.002"/>
+  <testcase name="getTopListenerFromDateReturnsNullForNullMap()" classname="org.spotifumtp37.util.StatsComplementTest" time="0.001"/>
+  <testcase name="getTopListenerFromDateReturnsNullForNullDate()" classname="org.spotifumtp37.util.StatsComplementTest" time="0.001"/>
+  <testcase name="getTopListenerFromDateWithSingleUser()" classname="org.spotifumtp37.util.StatsComplementTest" time="0.0"/>
+  <testcase name="getTopListenerFromDateFiltersCorrectlyByDate()" classname="org.spotifumtp37.util.StatsComplementTest" time="0.001"/>
+  <testcase name="getTopListenerFromDateWithExactCutoffDateIsInclusive()" classname="org.spotifumtp37.util.StatsComplementTest" time="0.0"/>
+  <testcase name="getTopListenerFromDateReturnsNullForEmptyMap()" classname="org.spotifumtp37.util.StatsComplementTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

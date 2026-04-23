@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Stats.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">GrupoTP-37</a> &gt; <a href="index.source.html" class="el_package">org.spotifumtp37.util</a> &gt; <span class="el_source">Stats.java</span></div><h1>Stats.java</h1><pre class="source lang-java linenums">package org.spotifumtp37.util;
+
+import org.spotifumtp37.model.album.Album;
+import org.spotifumtp37.model.album.Song;
+import org.spotifumtp37.model.playlist.Playlist;
+import org.spotifumtp37.model.user.User;
+
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+<span class="nc" id="L13">public class Stats {</span>
+
+    /**
+     * Gets the most played song from all albums.
+     *
+     * @param albums A map of album titles to Album objects.
+     * @return The most played Song, or null if no albums or songs are available.
+     */
+    public static Song getMostPlayedSong(Map&lt;String, Album&gt; albums) {
+<span class="fc bfc" id="L22" title="All 4 branches covered.">        if (albums == null || albums.isEmpty()) {</span>
+<span class="fc" id="L23">            return null;</span>
+        }
+<span class="fc" id="L25">        return albums.values().stream()</span>
+<span class="fc" id="L26">                .flatMap(album -&gt; album.getSongsCopy().stream())</span>
+<span class="fc" id="L27">                .max(Comparator.comparingInt(Song::getTimesPlayed))</span>
+<span class="fc" id="L28">                .orElse(null);</span>
+    }
+
+    /**
+     * Gets the artist with the most song plays across all albums.
+     *
+     * @param albums A map of album titles to Album objects.
+     * @return The name of the most listened to artist, or null if no data.
+     */
+    public static String getMostListenedArtist(Map&lt;String, Album&gt; albums) {
+<span class="fc bfc" id="L38" title="All 4 branches covered.">        if (albums == null || albums.isEmpty()) {</span>
+<span class="fc" id="L39">            return null;</span>
+        }
+<span class="fc" id="L41">        Map&lt;String, Integer&gt; playCountByArtist = new HashMap&lt;&gt;();</span>
+
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        for (Album album : albums.values()) {</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">            for (Song song : album.getSongsCopy()) {</span>
+<span class="fc" id="L45">                String artist = song.getArtist();</span>
+<span class="fc" id="L46">                playCountByArtist.put(artist, playCountByArtist.getOrDefault(artist, 0) + song.getTimesPlayed());</span>
+<span class="fc" id="L47">            }</span>
+<span class="fc" id="L48">        }</span>
+
+<span class="fc" id="L50">        return playCountByArtist.entrySet().stream()</span>
+<span class="fc" id="L51">                .max(Map.Entry.comparingByValue())</span>
+<span class="fc" id="L52">                .map(Map.Entry::getKey)</span>
+<span class="fc" id="L53">                .orElse(null);</span>
+    }
+
+    /**
+     * Gets the user who has listened to the most songs (based on history size).
+     *
+     * @param usersMap A map of usernames to User objects.
+     * @return The User with the largest listening history, or null if the map is empty or null.
+     */
+    public static User getTopListener(Map&lt;String, User&gt; usersMap) {
+<span class="fc bfc" id="L63" title="All 4 branches covered.">        if (usersMap == null || usersMap.isEmpty()) {</span>
+<span class="fc" id="L64">            return null;</span>
+        }
+<span class="fc" id="L66">        return usersMap.values().stream()</span>
+<span class="fc" id="L67">                .max(Comparator.comparingInt(user -&gt; user.getHistory().size()))</span>
+<span class="fc" id="L68">                .orElse(null);</span>
+    }
+
+    public static User getTopListenerFromDate(Map&lt;String, User&gt; usersMap, LocalDateTime fromDate) {
+<span class="fc bfc" id="L72" title="All 6 branches covered.">        if (usersMap == null || usersMap.isEmpty() || fromDate == null) {</span>
+<span class="fc" id="L73">            return null;</span>
+        }
+<span class="fc" id="L75">        return usersMap.values().stream()</span>
+<span class="fc" id="L76">                .max(Comparator.comparingInt(user -&gt;</span>
+<span class="fc" id="L77">                        (int) user.getHistory().stream()</span>
+<span class="fc bfc" id="L78" title="All 4 branches covered.">                                .filter(h -&gt; h.getTime().isAfter(fromDate) || h.getTime().isEqual(fromDate))</span>
+<span class="fc" id="L79">                                .count()</span>
+                ))
+<span class="fc" id="L81">                .orElse(null);</span>
+    }
+
+    /**
+     * Gets the user with the most points.
+     * Assumes User.getPontos() returns the current, subscription-adjusted points.
+     *
+     * @param usersMap A map of usernames to User objects.
+     * @return The User with the most points, or null if the map is empty or null.
+     */
+    public static User getUserWithMostPoints(Map&lt;String, User&gt; usersMap) {
+<span class="fc bfc" id="L92" title="All 4 branches covered.">        if (usersMap == null || usersMap.isEmpty()) {</span>
+<span class="fc" id="L93">            return null;</span>
+        }
+<span class="fc" id="L95">        return usersMap.values().stream()</span>
+<span class="fc" id="L96">                .max(Comparator.comparingDouble(User::getPontos))</span>
+<span class="fc" id="L97">                .orElse(null);</span>
+    }
+
+    /**
+     * Determines the most played genre based on all users' listening histories.
+     *
+     * @param usersMap A map of usernames to User objects, where each User has a listening history.
+     * @return The name of the most reproduced genre, or null if no users or history.
+     */
+    public static String mostListenedGenre(Map&lt;String, User&gt; usersMap) {
+<span class="fc bfc" id="L107" title="All 4 branches covered.">        if (usersMap == null || usersMap.isEmpty()) {</span>
+<span class="fc" id="L108">            return null;</span>
+        }
+
+<span class="fc" id="L111">        Map&lt;String, Long&gt; GenreCounter = usersMap.values().stream()</span>
+<span class="fc" id="L112">                .flatMap(user -&gt; user.getHistory().stream()) // Stream all history entries from all users</span>
+<span class="fc" id="L113">                .map(historyEntry -&gt; historyEntry.getSong().getGenre()) // Get the genre of each song in history</span>
+<span class="fc" id="L114">                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting())); // Count occurrences of each genre</span>
+
+<span class="fc" id="L116">        return GenreCounter.entrySet().stream()</span>
+<span class="fc" id="L117">                .max(Map.Entry.comparingByValue())</span>
+<span class="fc" id="L118">                .map(Map.Entry::getKey)</span>
+<span class="fc" id="L119">                .orElse(null);</span>
+    }
+
+    /**
+     * Counts the number of public playlists.
+     *
+     * @param playlistsMap A map of playlist names to Playlist objects.
+     * @return The total count of public playlists.
+     */
+    public static long countPublicPlaylists(Map&lt;String, Playlist&gt; playlistsMap) {
+<span class="fc bfc" id="L129" title="All 4 branches covered.">        if (playlistsMap == null || playlistsMap.isEmpty()) {</span>
+<span class="fc" id="L130">            return 0L;</span>
+        }
+<span class="fc" id="L132">        return playlistsMap.values().stream()</span>
+<span class="fc" id="L133">                .filter(Playlist::isPublic)</span>
+<span class="fc" id="L134">                .count();</span>
+    }
+
+    /**
+     * Finds the user who has created the most playlists.
+     * This method assumes Playlist objects have a getCreator() method that returns a User object.
+     *
+     * @param playlistsMap A map of playlist names to Playlist objects.
+     * @return The User who has created the most playlists, or null if no playlists or creators.
+     */
+    public static User userWithMostPlaylists(Map&lt;String, Playlist&gt; playlistsMap) {
+<span class="fc bfc" id="L145" title="All 4 branches covered.">        if (playlistsMap == null || playlistsMap.isEmpty()) {</span>
+<span class="fc" id="L146">            return null;</span>
+        }
+
+<span class="fc" id="L149">        Map&lt;User, Long&gt; playlistCountsByCreator = playlistsMap.values().stream()</span>
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">                .filter(playlist -&gt; playlist.getCreator() != null)</span>
+<span class="fc" id="L151">                .collect(Collectors.groupingBy(Playlist::getCreator, Collectors.counting()));</span>
+
+<span class="fc" id="L153">        return playlistCountsByCreator.entrySet().stream()</span>
+<span class="fc" id="L154">                .max(Map.Entry.comparingByValue())</span>
+<span class="fc" id="L155">                .map(Map.Entry::getKey)</span>
+<span class="fc" id="L156">                .orElse(null);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

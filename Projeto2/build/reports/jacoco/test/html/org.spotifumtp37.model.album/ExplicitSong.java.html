@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExplicitSong.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">GrupoTP-37</a> &gt; <a href="index.source.html" class="el_package">org.spotifumtp37.model.album</a> &gt; <span class="el_source">ExplicitSong.java</span></div><h1>ExplicitSong.java</h1><pre class="source lang-java linenums">package org.spotifumtp37.model.album;
+
+import java.io.Serializable;
+
+/**
+ * Represents a song with explicit content in a music application.
+ * &lt;p&gt;
+ * This class extends the base {@link Song} class and adds functionality to mark
+ * a song as containing explicit content.
+ * &lt;/p&gt;
+ */
+public class ExplicitSong extends Song implements Serializable {
+    private final boolean explicit;
+
+    /**
+     * Copy constructor that creates a new ExplicitSong as a copy of another ExplicitSong.
+     *
+     * @param other The ExplicitSong to copy
+     */
+    ExplicitSong(ExplicitSong other) {
+<span class="fc" id="L21">        super(other);</span>
+<span class="fc" id="L22">        this.explicit = other.isExplicit();</span>
+<span class="fc" id="L23">    }</span>
+
+    /**
+     * Parameterized constructor to create an explicit song with specific attributes.
+     *
+     * @param name The name of the song
+     * @param artist The artist who performs the song
+     * @param publisher The publisher of the song
+     * @param lyrics The lyrics of the song
+     * @param musicalNotes The musical notes or composition information
+     * @param genre The genre of the song
+     * @param durationInSeconds The duration of the song in seconds
+     */
+    public ExplicitSong(String name, String artist, String publisher, String lyrics, String musicalNotes, String genre, int durationInSeconds) {
+<span class="fc" id="L37">        super(name, artist, publisher, lyrics, musicalNotes, genre, durationInSeconds);</span>
+<span class="fc" id="L38">        this.explicit = true;</span>
+<span class="fc" id="L39">    }</span>
+
+    /**
+     * Checks if the song contains explicit content.
+     *
+     * @return {@code true} since this is an explicit song
+     */
+    public boolean isExplicit() {
+<span class="fc" id="L47">        return explicit;</span>
+    }
+
+    /**
+     * Checks if the song has multimedia content.
+     *
+     * @return {@code false} as explicit songs do not inherently have multimedia content
+     */
+    public boolean isMultimedia() {
+<span class="fc" id="L56">        return false;</span>
+    }
+
+    /**
+     * Creates and returns a deep copy of this explicit song.
+     *
+     * @return A new ExplicitSong instance that is a copy of this song
+     */
+    @Override
+    public ExplicitSong clone() {
+<span class="fc" id="L66">        return new ExplicitSong(this);</span>
+    }
+
+    /**
+     * Returns a string representation of the explicit song.
+     *
+     * @return A string containing the base song's string representation plus the explicit flag
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L76">        return super.toString() +</span>
+                &quot;explicit=&quot; + explicit +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

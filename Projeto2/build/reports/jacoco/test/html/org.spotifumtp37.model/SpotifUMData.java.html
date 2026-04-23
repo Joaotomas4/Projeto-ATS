@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SpotifUMData.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">GrupoTP-37</a> &gt; <a href="index.source.html" class="el_package">org.spotifumtp37.model</a> &gt; <span class="el_source">SpotifUMData.java</span></div><h1>SpotifUMData.java</h1><pre class="source lang-java linenums">package org.spotifumtp37.model;
+
+import org.spotifumtp37.model.album.*;
+import org.spotifumtp37.exceptions.AlreadyExistsException;
+import org.spotifumtp37.exceptions.DoesntExistException;
+import org.spotifumtp37.model.playlist.Playlist;
+import org.spotifumtp37.model.user.*;
+
+import java.io.Serializable;
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class SpotifUMData implements Serializable {
+    private Map&lt;String, Album&gt; albums;
+    private Map&lt;String, User&gt; users;
+    private Map&lt;String, Playlist&gt; playlists;
+
+<span class="fc" id="L18">    public SpotifUMData() {</span>
+<span class="fc" id="L19">        this.albums = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L20">        this.users = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L21">        this.playlists = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L22">    }</span>
+
+<span class="fc" id="L24">    public SpotifUMData(SpotifUMData outro) {</span>
+<span class="fc" id="L25">        this.albums = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        for (Map.Entry&lt;String, Album&gt; entry : outro.albums.entrySet()) {</span>
+<span class="fc" id="L27">            this.albums.put(entry.getKey(), entry.getValue().clone());</span>
+<span class="fc" id="L28">        }</span>
+<span class="fc" id="L29">        this.users = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">        for (Map.Entry&lt;String, User&gt; entry : outro.users.entrySet()) {</span>
+<span class="fc" id="L31">            this.users.put(entry.getKey(), entry.getValue().clone());</span>
+<span class="fc" id="L32">        }</span>
+<span class="fc" id="L33">        this.playlists = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        for (Map.Entry&lt;String, Playlist&gt; entry : outro.playlists.entrySet()) {</span>
+<span class="fc" id="L35">            this.playlists.put(entry.getKey(), entry.getValue().clone());</span>
+<span class="fc" id="L36">        }</span>
+<span class="fc" id="L37">    }</span>
+
+    @Override
+    public SpotifUMData clone() {
+<span class="fc" id="L41">        return new SpotifUMData(this);</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="fc" id="L46">        return &quot;Albums: &quot; + albums.toString()</span>
+<span class="fc" id="L47">                + &quot;\nUsers: &quot; + users.toString()</span>
+<span class="fc" id="L48">                + &quot;\nPlaylists: &quot; + playlists.toString();</span>
+    }
+
+    @Override
+    public boolean equals(Object o) {
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (this == o) return true;</span>
+<span class="pc bpc" id="L54" title="2 of 4 branches missed.">        if (o == null || getClass() != o.getClass()) return false;</span>
+<span class="fc" id="L55">        SpotifUMData that = (SpotifUMData) o;</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        return Objects.equals(albums, that.albums)</span>
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">                &amp;&amp; Objects.equals(users, that.users)</span>
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">                &amp;&amp; Objects.equals(playlists, that.playlists);</span>
+    }
+
+    public Map&lt;String, Album&gt; getMapAlbumsCopy() {
+<span class="fc" id="L62">        Map&lt;String, Album&gt; mapCarros = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        for (Map.Entry&lt;String, Album&gt; entry : albums.entrySet()) {</span>
+<span class="fc" id="L64">            mapCarros.put(entry.getKey(), entry.getValue().clone());</span>
+<span class="fc" id="L65">        }</span>
+<span class="fc" id="L66">        return mapCarros;</span>
+    }
+
+    public Map&lt;String, Album&gt; getMapAlbums() {
+<span class="fc" id="L70">        return new HashMap&lt;&gt;(albums);</span>
+    }
+
+    public Map&lt;String, User&gt; getMapUsers() {
+<span class="fc" id="L74">        Map&lt;String, User&gt; mapUsers = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        for (Map.Entry&lt;String, User&gt; entry : users.entrySet()) {</span>
+<span class="fc" id="L76">            mapUsers.put(entry.getKey(), entry.getValue().clone());</span>
+<span class="fc" id="L77">        }</span>
+<span class="fc" id="L78">        return mapUsers;</span>
+    }
+
+    public User getCurrentUserPointer(String username) {
+<span class="fc" id="L82">        return this.users.get(username);</span>
+    }
+
+    public Map&lt;String, Playlist&gt; getMapPlaylists() {
+<span class="fc" id="L86">        Map&lt;String, Playlist&gt; mapPlaylists = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        for (Map.Entry&lt;String, Playlist&gt; entry : playlists.entrySet()) {</span>
+<span class="fc" id="L88">            mapPlaylists.put(entry.getKey(), entry.getValue().clone());</span>
+<span class="fc" id="L89">        }</span>
+<span class="fc" id="L90">        return mapPlaylists;</span>
+    }
+
+    public void setMapAlbums(Map&lt;String, Album&gt; mapAlbums) {
+<span class="fc" id="L94">        Map&lt;String, Album&gt; newMapAlbums = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        for (Map.Entry&lt;String, Album&gt; entry : mapAlbums.entrySet()) {</span>
+<span class="fc" id="L96">            newMapAlbums.put(entry.getKey(), entry.getValue().clone());</span>
+<span class="fc" id="L97">        }</span>
+<span class="fc" id="L98">        this.albums = newMapAlbums;</span>
+<span class="fc" id="L99">    }</span>
+
+    public void setMapUsers(Map&lt;String, User&gt; mapUsers) {
+<span class="fc" id="L102">        Map&lt;String, User&gt; newMapUsers = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        for (Map.Entry&lt;String, User&gt; entry : mapUsers.entrySet()) {</span>
+<span class="fc" id="L104">            newMapUsers.put(entry.getKey(), entry.getValue().clone());</span>
+<span class="fc" id="L105">        }</span>
+<span class="fc" id="L106">        this.users = newMapUsers;</span>
+<span class="fc" id="L107">    }</span>
+
+    public void setMapPlaylists(Map&lt;String, Playlist&gt; mapPlaylists) {
+<span class="fc" id="L110">        Map&lt;String, Playlist&gt; newMapPlaylists = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        for (Map.Entry&lt;String, Playlist&gt; entry : mapPlaylists.entrySet()) {</span>
+<span class="fc" id="L112">            newMapPlaylists.put(entry.getKey(), entry.getValue().clone());</span>
+<span class="fc" id="L113">        }</span>
+<span class="fc" id="L114">        this.playlists = newMapPlaylists;</span>
+<span class="fc" id="L115">    }</span>
+
+    public boolean existsAlbum(String title) {
+<span class="fc" id="L118">        return albums.containsKey(title);</span>
+    }
+
+    public boolean existsSong(String title, String albumTitle) {
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        if (existsAlbum(albumTitle)) {</span>
+<span class="fc" id="L123">            Album album = albums.get(albumTitle);</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">            for (Song song : album.getSongsCopy()) {</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">                if (song.getName().equals(title)) {</span>
+<span class="fc" id="L126">                    return true;</span>
+                }
+<span class="fc" id="L128">            }</span>
+        }
+<span class="fc" id="L130">        return false;</span>
+    }
+
+    public boolean existsPlaylist(String playlistName) {
+<span class="fc" id="L134">        return playlists.containsKey(playlistName);</span>
+    }
+
+    public boolean existsUser(String username) {
+<span class="fc" id="L138">        return users.containsKey(username);</span>
+    }
+
+    public Album getAlbum(String title) throws DoesntExistException {
+<span class="fc bfc" id="L142" title="All 2 branches covered.">        if (!existsAlbum(title)) {</span>
+<span class="fc" id="L143">            throw new DoesntExistException(title);</span>
+        } else {
+<span class="fc" id="L145">            return albums.get(title);</span>
+        }
+    }
+
+    public Song getSong(String title, String albumTitle) throws DoesntExistException {
+<span class="fc bfc" id="L150" title="All 2 branches covered.">        if (!existsSong(title, albumTitle)) {</span>
+<span class="fc" id="L151">            throw new DoesntExistException(title);</span>
+        } else {
+<span class="fc" id="L153">            Album album = albums.get(albumTitle);</span>
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">            for (Song song : album.getSongsCopy()) {</span>
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">                if (song.getName().equals(title)) {</span>
+<span class="fc" id="L156">                    return song;</span>
+                }
+<span class="nc" id="L158">            }</span>
+        }
+<span class="nc" id="L160">        return null;</span>
+    }
+
+    public Playlist getPlaylist(String playlistName) throws DoesntExistException {
+<span class="fc bfc" id="L164" title="All 2 branches covered.">        if (!existsPlaylist(playlistName)) {</span>
+<span class="fc" id="L165">            throw new DoesntExistException(playlistName);</span>
+        } else {
+<span class="fc" id="L167">            return playlists.get(playlistName);</span>
+        }
+    }
+
+    public Playlist getAnyPlaylist(String playlistName,User creator) throws DoesntExistException {
+<span class="pc bpc" id="L172" title="2 of 6 branches missed.">        if (existsPlaylist(playlistName) &amp;&amp; ( this.getPlaylistMapByCreator(creator).containsKey(playlistName) || playlists.get(playlistName).isPublic())) {</span>
+<span class="fc" id="L173">            return playlists.get(playlistName);</span>
+        } else {
+<span class="fc" id="L175">            throw new DoesntExistException(playlistName);</span>
+        }
+    }
+
+    public User getUser(String username) throws DoesntExistException {
+<span class="fc bfc" id="L180" title="All 2 branches covered.">        if (!existsUser(username)) {</span>
+<span class="fc" id="L181">            throw new DoesntExistException(username);</span>
+        } else {
+<span class="fc" id="L183">            return users.get(username).clone();</span>
+        }
+    }
+
+    public void addAlbum(Album album) throws AlreadyExistsException {
+<span class="fc bfc" id="L188" title="All 2 branches covered.">        if (!albums.containsKey(album.getTitle())) {</span>
+<span class="fc" id="L189">            albums.put(album.getTitle(), album.clone());</span>
+        } else {
+<span class="fc" id="L191">            throw new AlreadyExistsException(album.getTitle());</span>
+        }
+<span class="fc" id="L193">    }</span>
+
+    public void addPlaylist(Playlist playlist) throws AlreadyExistsException {
+<span class="fc bfc" id="L196" title="All 2 branches covered.">        if (!playlists.containsKey(playlist.getPlaylistName())) {</span>
+<span class="fc" id="L197">            playlists.put(playlist.getPlaylistName(), playlist.clone());</span>
+        } else {
+<span class="fc" id="L199">            throw new AlreadyExistsException(playlist.getPlaylistName());</span>
+        }
+<span class="fc" id="L201">    }</span>
+
+    public void addUser(User user) throws AlreadyExistsException {
+<span class="fc bfc" id="L204" title="All 2 branches covered.">        if (!users.containsKey(user.getName())) {</span>
+<span class="fc" id="L205">            users.put(user.getName(), user.clone());</span>
+        } else {
+<span class="fc" id="L207">            throw new AlreadyExistsException(user.getName());</span>
+        }
+<span class="fc" id="L209">    }</span>
+
+    public void removeAlbum(String title) throws DoesntExistException {
+<span class="fc bfc" id="L212" title="All 2 branches covered.">        if (albums.containsKey(title)) {</span>
+<span class="fc" id="L213">            albums.remove(title);</span>
+        } else {
+<span class="fc" id="L215">            throw new DoesntExistException(title);</span>
+        }
+<span class="fc" id="L217">    }</span>
+
+    public void removePlaylist(String playlistName) throws DoesntExistException {
+<span class="fc bfc" id="L220" title="All 2 branches covered.">        if (playlists.containsKey(playlistName)) {</span>
+<span class="fc" id="L221">            playlists.remove(playlistName);</span>
+        } else {
+<span class="fc" id="L223">            throw new DoesntExistException(playlistName);</span>
+        }
+<span class="fc" id="L225">    }</span>
+
+    public void removeUser(String username) throws DoesntExistException {
+<span class="fc bfc" id="L228" title="All 2 branches covered.">        if (users.containsKey(username)) {</span>
+<span class="fc" id="L229">            users.remove(username);</span>
+        } else {
+<span class="fc" id="L231">            throw new DoesntExistException(username);</span>
+        }
+<span class="fc" id="L233">    }</span>
+
+    public Map&lt;String, Playlist&gt; getPlaylistMapByCreator(User creator) {
+<span class="fc" id="L236">        return playlists.entrySet().stream()</span>
+<span class="fc" id="L237">                .filter(e -&gt; e.getValue().getCreator().equals(creator))</span>
+<span class="fc" id="L238">                .collect(Collectors.toMap(</span>
+                        Map.Entry::getKey,
+                        Map.Entry::getValue
+                ));
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

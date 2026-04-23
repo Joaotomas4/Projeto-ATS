@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.spotifumtp37.model.playlist.Playlist_ESTest" tests="80" skipped="0" failures="0" errors="0" timestamp="2026-04-20T11:27:52" hostname="joao-ASUS-TUF-Dash-F15-FX517ZE-FX517ZE" time="0.091">
+  <properties/>
+  <testcase name="test00" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.002"/>
+  <testcase name="test44" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.002"/>
+  <testcase name="test01" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test45" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.007"/>
+  <testcase name="test42" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.002"/>
+  <testcase name="test43" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test04" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test48" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test05" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test49" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test02" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test46" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.002"/>
+  <testcase name="test03" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test47" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test08" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test09" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.003"/>
+  <testcase name="test06" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test07" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test40" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.0"/>
+  <testcase name="test41" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.005"/>
+  <testcase name="test11" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test55" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test12" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test56" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.0"/>
+  <testcase name="test53" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.0"/>
+  <testcase name="test10" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test54" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test15" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test59" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.0"/>
+  <testcase name="test16" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test13" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test57" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.002"/>
+  <testcase name="test14" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test58" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test19" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test17" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test18" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test51" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.002"/>
+  <testcase name="test52" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test50" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test22" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test66" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test23" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.0"/>
+  <testcase name="test67" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test20" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test64" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test21" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test65" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test26" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test27" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.0"/>
+  <testcase name="test24" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test68" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test25" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test69" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test28" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test29" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test62" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.0"/>
+  <testcase name="test63" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test60" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test61" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.0"/>
+  <testcase name="test33" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test77" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test34" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.0"/>
+  <testcase name="test78" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test31" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test75" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.0"/>
+  <testcase name="test32" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test76" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test37" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test38" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test35" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test79" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test36" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test39" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test70" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.0"/>
+  <testcase name="test73" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test30" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test74" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test71" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <testcase name="test72" classname="org.spotifumtp37.model.playlist.Playlist_ESTest" time="0.001"/>
+  <system-out><![CDATA[12:27:52.629 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Seeing class for first time: org.spotifumtp37.model.playlist.Playlist_ESTest
+12:27:52.629 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Instrumenting class 'org.spotifumtp37.model.playlist.Playlist_ESTest'.
+12:27:52.636 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Seeing class for first time: org.spotifumtp37.model.playlist.Playlist_ESTest_scaffolding
+12:27:52.636 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Instrumenting class 'org.spotifumtp37.model.playlist.Playlist_ESTest_scaffolding'.
+12:27:52.637 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Keeping class: org.spotifumtp37.model.playlist.Playlist_ESTest_scaffolding
+12:27:52.638 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Keeping class: org.spotifumtp37.model.playlist.Playlist_ESTest
+12:27:52.638 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Seeing class for first time: org.spotifumtp37.model.subscription.SubscriptionPlan
+12:27:52.638 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Instrumenting class 'org.spotifumtp37.model.subscription.SubscriptionPlan'.
+12:27:52.639 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Defined package (3): package org.spotifumtp37.model.subscription, -1036098257
+12:27:52.639 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Keeping class: org.spotifumtp37.model.subscription.SubscriptionPlan
+12:27:52.649 [Test worker] DEBUG org.evosuite.runtime.sandbox.MSecurityManager - Adding privileged thread: "Reference Handler"
+12:27:52.650 [Test worker] DEBUG org.evosuite.runtime.sandbox.MSecurityManager - Adding privileged thread: "Finalizer"
+12:27:52.650 [Test worker] DEBUG org.evosuite.runtime.sandbox.MSecurityManager - Adding privileged thread: "Signal Dispatcher"
+12:27:52.650 [Test worker] DEBUG org.evosuite.runtime.sandbox.MSecurityManager - Adding privileged thread: "process reaper"
+12:27:52.650 [Test worker] DEBUG org.evosuite.runtime.sandbox.MSecurityManager - Adding privileged thread: "Java2D Disposer"
+12:27:52.650 [Test worker] DEBUG org.evosuite.runtime.sandbox.MSecurityManager - Adding privileged thread: "Test worker"
+12:27:52.650 [Test worker] DEBUG org.evosuite.runtime.sandbox.MSecurityManager - Adding privileged thread: "/127.0.0.1:50848 to /127.0.0.1:40893 workers"
+12:27:52.650 [Test worker] DEBUG org.evosuite.runtime.sandbox.MSecurityManager - Adding privileged thread: "/127.0.0.1:50848 to /127.0.0.1:40893 workers Thread 2"
+12:27:52.650 [Test worker] DEBUG org.evosuite.runtime.sandbox.MSecurityManager - Adding privileged thread: "/127.0.0.1:50848 to /127.0.0.1:40893 workers Thread 3"
+12:27:52.651 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Seeing class for first time: org.spotifumtp37.model.playlist.Playlist
+12:27:52.651 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Instrumenting class 'org.spotifumtp37.model.playlist.Playlist'.
+12:27:52.652 [Test worker] INFO org.evosuite.runtime.instrumentation.MethodCallReplacementClassAdapter - Adding mock interface to class org/spotifumtp37/model/playlist/Playlist
+12:27:52.659 [Test worker] INFO org.evosuite.runtime.instrumentation.CreateClassResetClassAdapter - Creating brand-new static initializer in class org/spotifumtp37/model/playlist/Playlist
+12:27:52.660 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Seeing class for first time: org.spotifumtp37.model.playlist.Playable
+12:27:52.660 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Instrumenting class 'org.spotifumtp37.model.playlist.Playable'.
+12:27:52.662 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Keeping class: org.spotifumtp37.model.playlist.Playable
+12:27:52.663 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Keeping class: org.spotifumtp37.model.playlist.Playlist
+12:27:52.663 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Seeing class for first time: org.spotifumtp37.exceptions.SubscriptionDoesNotAllowException
+12:27:52.663 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Instrumenting class 'org.spotifumtp37.exceptions.SubscriptionDoesNotAllowException'.
+12:27:52.664 [Test worker] INFO org.evosuite.runtime.instrumentation.MethodCallReplacementClassAdapter - Adding mock interface to class org/spotifumtp37/exceptions/SubscriptionDoesNotAllowException
+12:27:52.665 [Test worker] INFO org.evosuite.runtime.instrumentation.CreateClassResetClassAdapter - Creating brand-new static initializer in class org/spotifumtp37/exceptions/SubscriptionDoesNotAllowException
+12:27:52.665 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Defined package (3): package org.spotifumtp37.exceptions, 2068883569
+12:27:52.665 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Keeping class: org.spotifumtp37.exceptions.SubscriptionDoesNotAllowException
+12:27:52.666 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Seeing class for first time: org.spotifumtp37.model.subscription.PremiumBase
+12:27:52.666 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Instrumenting class 'org.spotifumtp37.model.subscription.PremiumBase'.
+12:27:52.667 [Test worker] INFO org.evosuite.runtime.instrumentation.MethodCallReplacementClassAdapter - Adding mock interface to class org/spotifumtp37/model/subscription/PremiumBase
+12:27:52.668 [Test worker] INFO org.evosuite.runtime.instrumentation.CreateClassResetClassAdapter - Creating brand-new static initializer in class org/spotifumtp37/model/subscription/PremiumBase
+12:27:52.668 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Keeping class: org.spotifumtp37.model.subscription.PremiumBase
+12:27:52.669 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Seeing class for first time: org.spotifumtp37.model.user.History
+12:27:52.669 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Instrumenting class 'org.spotifumtp37.model.user.History'.
+12:27:52.670 [Test worker] INFO org.evosuite.runtime.instrumentation.MethodCallReplacementClassAdapter - Adding mock interface to class org/spotifumtp37/model/user/History
+12:27:52.671 [Test worker] INFO org.evosuite.runtime.instrumentation.CreateClassResetClassAdapter - Creating brand-new static initializer in class org/spotifumtp37/model/user/History
+12:27:52.671 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Defined package (3): package org.spotifumtp37.model.user, 1148004829
+12:27:52.671 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Keeping class: org.spotifumtp37.model.user.History
+12:27:52.672 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Seeing class for first time: org.spotifumtp37.model.subscription.FreePlan
+12:27:52.672 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Instrumenting class 'org.spotifumtp37.model.subscription.FreePlan'.
+12:27:52.673 [Test worker] INFO org.evosuite.runtime.instrumentation.MethodCallReplacementClassAdapter - Adding mock interface to class org/spotifumtp37/model/subscription/FreePlan
+12:27:52.674 [Test worker] INFO org.evosuite.runtime.instrumentation.CreateClassResetClassAdapter - Creating brand-new static initializer in class org/spotifumtp37/model/subscription/FreePlan
+12:27:52.674 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Keeping class: org.spotifumtp37.model.subscription.FreePlan
+12:27:52.674 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Seeing class for first time: org.spotifumtp37.model.album.Album
+12:27:52.674 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Instrumenting class 'org.spotifumtp37.model.album.Album'.
+12:27:52.675 [Test worker] INFO org.evosuite.runtime.instrumentation.MethodCallReplacementClassAdapter - Adding mock interface to class org/spotifumtp37/model/album/Album
+12:27:52.681 [Test worker] INFO org.evosuite.runtime.instrumentation.CreateClassResetClassAdapter - Creating brand-new static initializer in class org/spotifumtp37/model/album/Album
+12:27:52.682 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Keeping class: org.spotifumtp37.model.album.Album
+12:27:52.683 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Seeing class for first time: org.spotifumtp37.model.album.Song
+12:27:52.683 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Instrumenting class 'org.spotifumtp37.model.album.Song'.
+12:27:52.684 [Test worker] INFO org.evosuite.runtime.instrumentation.MethodCallReplacementClassAdapter - Adding mock interface to class org/spotifumtp37/model/album/Song
+12:27:52.685 [Test worker] INFO org.evosuite.runtime.instrumentation.CreateClassResetClassAdapter - Creating brand-new static initializer in class org/spotifumtp37/model/album/Song
+12:27:52.686 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Keeping class: org.spotifumtp37.model.album.Song
+12:27:52.686 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Seeing class for first time: org.spotifumtp37.model.album.ExplicitSong
+12:27:52.686 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Instrumenting class 'org.spotifumtp37.model.album.ExplicitSong'.
+12:27:52.687 [Test worker] INFO org.evosuite.runtime.instrumentation.MethodCallReplacementClassAdapter - Adding mock interface to class org/spotifumtp37/model/album/ExplicitSong
+12:27:52.688 [Test worker] INFO org.evosuite.runtime.instrumentation.CreateClassResetClassAdapter - Creating brand-new static initializer in class org/spotifumtp37/model/album/ExplicitSong
+12:27:52.688 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Keeping class: org.spotifumtp37.model.album.ExplicitSong
+12:27:52.689 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Seeing class for first time: org.spotifumtp37.model.album.MultimediaSong
+12:27:52.689 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Instrumenting class 'org.spotifumtp37.model.album.MultimediaSong'.
+12:27:52.689 [Test worker] INFO org.evosuite.runtime.instrumentation.MethodCallReplacementClassAdapter - Adding mock interface to class org/spotifumtp37/model/album/MultimediaSong
+12:27:52.690 [Test worker] INFO org.evosuite.runtime.instrumentation.CreateClassResetClassAdapter - Creating brand-new static initializer in class org/spotifumtp37/model/album/MultimediaSong
+12:27:52.690 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Keeping class: org.spotifumtp37.model.album.MultimediaSong
+12:27:52.691 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Seeing class for first time: org.spotifumtp37.model.user.User
+12:27:52.691 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Instrumenting class 'org.spotifumtp37.model.user.User'.
+12:27:52.692 [Test worker] INFO org.evosuite.runtime.instrumentation.MethodCallReplacementClassAdapter - Adding mock interface to class org/spotifumtp37/model/user/User
+12:27:52.695 [Test worker] INFO org.evosuite.runtime.instrumentation.CreateClassResetClassAdapter - Creating brand-new static initializer in class org/spotifumtp37/model/user/User
+12:27:52.695 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Keeping class: org.spotifumtp37.model.user.User
+12:27:52.696 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Seeing class for first time: org.spotifumtp37.model.subscription.PremiumTop
+12:27:52.696 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Instrumenting class 'org.spotifumtp37.model.subscription.PremiumTop'.
+12:27:52.696 [Test worker] INFO org.evosuite.runtime.instrumentation.MethodCallReplacementClassAdapter - Adding mock interface to class org/spotifumtp37/model/subscription/PremiumTop
+12:27:52.697 [Test worker] INFO org.evosuite.runtime.instrumentation.CreateClassResetClassAdapter - Creating brand-new static initializer in class org/spotifumtp37/model/subscription/PremiumTop
+12:27:52.697 [Test worker] INFO org.evosuite.runtime.instrumentation.EvoClassLoader - Keeping class: org.spotifumtp37.model.subscription.PremiumTop
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

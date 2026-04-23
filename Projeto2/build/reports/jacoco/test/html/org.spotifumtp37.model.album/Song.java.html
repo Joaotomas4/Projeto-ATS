@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Song.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">GrupoTP-37</a> &gt; <a href="index.source.html" class="el_package">org.spotifumtp37.model.album</a> &gt; <span class="el_source">Song.java</span></div><h1>Song.java</h1><pre class="source lang-java linenums">package org.spotifumtp37.model.album;
+
+import java.io.Serializable;
+import java.util.Objects;
+
+/**
+ * Represents a musical song in the application.
+ * &lt;p&gt;
+ * This class contains the basic attributes of a song including name, artist,
+ * publisher, lyrics, musical notes, genre, duration, and play count statistics.
+ * It serves as the base class for specialized song types like {@link ExplicitSong}
+ * and {@link MultimediaSong}.
+ * &lt;/p&gt;
+ */
+public class Song implements Serializable {
+    private String name;
+    private String artist;
+    private String publisher;
+    private String lyrics;
+    private String musicalNotes;
+    private String genre;
+    private int durationInSeconds;
+    private int timesPlayed;
+
+    /**
+     * Default constructor that initializes an empty song.
+     * Creates a song with empty strings for all text fields,
+     * zero duration, and zero play count.
+     */
+<span class="fc" id="L30">    public Song() {</span>
+<span class="fc" id="L31">        this.name = &quot;&quot;;</span>
+<span class="fc" id="L32">        this.artist = &quot;&quot;;</span>
+<span class="fc" id="L33">        this.publisher = &quot;&quot;;</span>
+<span class="fc" id="L34">        this.lyrics = &quot;&quot;;</span>
+<span class="fc" id="L35">        this.musicalNotes = &quot;&quot;;</span>
+<span class="fc" id="L36">        this.genre = &quot;&quot;;</span>
+<span class="fc" id="L37">        this.durationInSeconds = 0;</span>
+<span class="fc" id="L38">        this.timesPlayed = 0;</span>
+<span class="fc" id="L39">    }</span>
+
+    /**
+     * Parameterized constructor to create a song with specific attributes.
+     *
+     * @param name The name of the song
+     * @param artist The artist who performs the song
+     * @param publisher The publisher of the song
+     * @param lyrics The lyrics of the song
+     * @param musicalNotes The musical notes or composition information
+     * @param genre The genre of the song
+     * @param durationInSeconds The duration of the song in seconds
+     */
+    public Song(String name, String artist, String publisher, String lyrics,
+<span class="fc" id="L53">                String musicalNotes, String genre, int durationInSeconds) {</span>
+<span class="fc" id="L54">        this.name = name;</span>
+<span class="fc" id="L55">        this.artist = artist;</span>
+<span class="fc" id="L56">        this.publisher = publisher;</span>
+<span class="fc" id="L57">        this.lyrics = lyrics;</span>
+<span class="fc" id="L58">        this.musicalNotes = musicalNotes;</span>
+<span class="fc" id="L59">        this.genre = genre;</span>
+<span class="fc" id="L60">        this.durationInSeconds = durationInSeconds;</span>
+<span class="fc" id="L61">        this.timesPlayed = 0;</span>
+<span class="fc" id="L62">    }</span>
+
+    /**
+     * Copy constructor that creates a new Song as a copy of another Song.
+     *
+     * @param other The Song to copy
+     */
+<span class="fc" id="L69">    public Song(Song other) {</span>
+<span class="fc" id="L70">        this.name = other.getName();</span>
+<span class="fc" id="L71">        this.artist = other.getArtist();</span>
+<span class="fc" id="L72">        this.publisher = other.getPublisher();</span>
+<span class="fc" id="L73">        this.lyrics = other.getLyrics();</span>
+<span class="fc" id="L74">        this.musicalNotes = other.getMusicalNotes();</span>
+<span class="fc" id="L75">        this.genre = other.getGenre();</span>
+<span class="fc" id="L76">        this.durationInSeconds = other.getDurationInSeconds();</span>
+<span class="fc" id="L77">        this.timesPlayed = other.getTimesPlayed();</span>
+<span class="fc" id="L78">    }</span>
+
+    /**
+     * Gets the name of the song.
+     *
+     * @return The song name
+     */
+    public String getName() {
+<span class="fc" id="L86">        return name;</span>
+    }
+
+    /**
+     * Sets the name of the song.
+     *
+     * @param name The new song name
+     */
+    public void setName(String name) {
+<span class="fc" id="L95">        this.name = name;</span>
+<span class="fc" id="L96">    }</span>
+
+    /**
+     * Gets the artist who performs the song.
+     *
+     * @return The artist name
+     */
+    public String getArtist() {
+<span class="fc" id="L104">        return artist;</span>
+    }
+
+    /**
+     * Sets the artist who performs the song.
+     *
+     * @param artist The new artist name
+     */
+    public void setArtist(String artist) {
+<span class="fc" id="L113">        this.artist = artist;</span>
+<span class="fc" id="L114">    }</span>
+
+    /**
+     * Gets the publisher of the song.
+     *
+     * @return The publisher name
+     */
+    public String getPublisher() {
+<span class="fc" id="L122">        return publisher;</span>
+    }
+
+    /**
+     * Sets the publisher of the song.
+     *
+     * @param publisher The new publisher name
+     */
+    public void setPublisher(String publisher) {
+<span class="fc" id="L131">        this.publisher = publisher;</span>
+<span class="fc" id="L132">    }</span>
+
+    /**
+     * Gets the lyrics of the song.
+     *
+     * @return The song lyrics
+     */
+    public String getLyrics() {
+<span class="fc" id="L140">        return lyrics;</span>
+    }
+
+    /**
+     * Sets the lyrics of the song.
+     *
+     * @param lyrics The new song lyrics
+     */
+    public void setLyrics(String lyrics) {
+<span class="fc" id="L149">        this.lyrics = lyrics;</span>
+<span class="fc" id="L150">    }</span>
+
+    /**
+     * Gets the musical notes or composition information.
+     *
+     * @return The musical notes
+     */
+    public String getMusicalNotes() {
+<span class="fc" id="L158">        return musicalNotes;</span>
+    }
+
+    /**
+     * Sets the musical notes or composition information.
+     *
+     * @param musicalNotes The new musical notes
+     */
+    public void setMusicalNotes(String musicalNotes) {
+<span class="fc" id="L167">        this.musicalNotes = musicalNotes;</span>
+<span class="fc" id="L168">    }</span>
+
+    /**
+     * Gets the genre of the song.
+     *
+     * @return The song genre
+     */
+    public String getGenre() {
+<span class="fc" id="L176">        return genre;</span>
+    }
+
+    /**
+     * Sets the genre of the song.
+     *
+     * @param genre The new song genre
+     */
+    public void setGenre(String genre) {
+<span class="fc" id="L185">        this.genre = genre;</span>
+<span class="fc" id="L186">    }</span>
+
+    /**
+     * Gets the duration of the song in seconds.
+     *
+     * @return The duration in seconds
+     */
+    public int getDurationInSeconds() {
+<span class="fc" id="L194">        return durationInSeconds;</span>
+    }
+
+    /**
+     * Sets the duration of the song in seconds.
+     *
+     * @param durationInSeconds The new duration in seconds
+     */
+    public void setDurationInSeconds(int durationInSeconds) {
+<span class="fc" id="L203">        this.durationInSeconds = durationInSeconds;</span>
+<span class="fc" id="L204">    }</span>
+
+    /**
+     * Gets the number of times the song has been played.
+     *
+     * @return The play count
+     */
+    public int getTimesPlayed() {
+<span class="fc" id="L212">        return timesPlayed;</span>
+    }
+
+    /**
+     * Sets the number of times the song has been played.
+     *
+     * @param timesPlayed The new play count
+     */
+    public void setTimesPlayed(int timesPlayed) {
+<span class="fc" id="L221">        this.timesPlayed = timesPlayed;</span>
+<span class="fc" id="L222">    }</span>
+
+    /**
+     * Increments the play count of the song by one.
+     */
+    public void incrementTimesPlayed() {
+<span class="fc" id="L228">        this.timesPlayed++;</span>
+<span class="fc" id="L229">    }</span>
+
+    /**
+     * Compares this song to another object for equality.
+     * &lt;p&gt;
+     * Two songs are considered equal if they have the same name, artist,
+     * publisher, duration, lyrics, musical notes, genre, and play count.
+     * &lt;/p&gt;
+     *
+     * @param obj The object to compare with
+     * @return {@code true} if the objects are equal, {@code false} otherwise
+     */
+    @Override
+    public boolean equals(Object obj) {
+<span class="fc bfc" id="L243" title="All 2 branches covered.">        if (this == obj) {</span>
+<span class="fc" id="L244">            return true;</span>
+        }
+<span class="fc bfc" id="L246" title="All 4 branches covered.">        if (obj == null || getClass() != obj.getClass()) {</span>
+<span class="fc" id="L247">            return false;</span>
+        }
+<span class="fc" id="L249">        Song other = (Song) obj;</span>
+<span class="fc bfc" id="L250" title="All 4 branches covered.">        return Objects.equals(name, other.name) &amp;&amp; Objects.equals(artist, other.artist)</span>
+<span class="fc bfc" id="L251" title="All 4 branches covered.">                &amp;&amp; Objects.equals(publisher, other.publisher) &amp;&amp; durationInSeconds == other.durationInSeconds</span>
+<span class="pc bpc" id="L252" title="2 of 4 branches missed.">                &amp;&amp; Objects.equals(lyrics, other.lyrics) &amp;&amp; Objects.equals(musicalNotes, other.musicalNotes)</span>
+<span class="pc bpc" id="L253" title="2 of 4 branches missed.">                &amp;&amp; Objects.equals(genre, other.genre) &amp;&amp; Objects.equals(timesPlayed, other.timesPlayed);</span>
+    }
+
+    /**
+     * Generates a hash code for this song.
+     * &lt;p&gt;
+     * The hash code is based on the song's name, artist, and duration.
+     * &lt;/p&gt;
+     *
+     * @return A hash code value for this song
+     */
+    @Override
+    public int hashCode() {
+<span class="fc" id="L266">        int result = getName().hashCode();</span>
+<span class="fc" id="L267">        result = 31 * result + getArtist().hashCode();</span>
+<span class="fc" id="L268">        result = 31 * result + getDurationInSeconds();</span>
+<span class="fc" id="L269">        return result;</span>
+    }
+
+    /**
+     * Creates and returns a deep copy of this song.
+     *
+     * @return A new Song instance that is a copy of this song
+     */
+    @Override
+    public Song clone() {
+<span class="fc" id="L279">        return new Song(this);</span>
+    }
+
+    /**
+     * Returns a string representation of the song.
+     *
+     * @return A string containing all the song's attributes
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L289">        return &quot;Song{&quot; +</span>
+                &quot;name='&quot; + name + '\'' +
+                &quot;, artist='&quot; + artist + '\'' +
+                &quot;, publisher='&quot; + publisher + '\'' +
+                &quot;, lyrics='&quot; + lyrics + '\'' +
+                &quot;, musicalNotes='&quot; + musicalNotes + '\'' +
+                &quot;, genre='&quot; + genre + '\'' +
+                &quot;, durationInSeconds=&quot; + durationInSeconds +
+                &quot;, timesPlayed=&quot; + timesPlayed +
+                '}';
+    }
+
+    /**
+     * Checks if the song contains explicit content.
+     * &lt;p&gt;
+     * This method returns {@code false} for regular songs.
+     * It is overridden in the {@link ExplicitSong} subclass.
+     * &lt;/p&gt;
+     *
+     * @return {@code false} for regular songs
+     */
+    public boolean isExplicit() {
+<span class="fc" id="L311">        return false;</span>
+    }
+    
+    /**
+     * Checks if the song has multimedia content.
+     * &lt;p&gt;
+     * This method returns {@code false} for regular songs.
+     * It is overridden in the {@link MultimediaSong} subclass.
+     * &lt;/p&gt;
+     *
+     * @return {@code false} for regular songs
+     */
+    public boolean isMultimedia() {
+<span class="fc" id="L324">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

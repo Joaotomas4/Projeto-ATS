@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SongTypeAdapter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">GrupoTP-37</a> &gt; <a href="index.source.html" class="el_package">org.spotifumtp37.util</a> &gt; <span class="el_source">SongTypeAdapter.java</span></div><h1>SongTypeAdapter.java</h1><pre class="source lang-java linenums">package org.spotifumtp37.util;
+
+import com.google.gson.*;
+import org.spotifumtp37.model.album.Song;
+import org.spotifumtp37.model.album.MultimediaSong;
+import org.spotifumtp37.model.album.ExplicitSong;
+
+import java.lang.reflect.Type;
+
+<span class="nc" id="L10">public class SongTypeAdapter implements JsonSerializer&lt;Song&gt;, JsonDeserializer&lt;Song&gt; {</span>
+
+    // Gson instance WITHOUT this adapter to prevent recursion
+<span class="nc" id="L13">    private final Gson delegateGson = new Gson();</span>
+
+    @Override
+    public Song deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+<span class="nc" id="L17">        JsonObject obj = json.getAsJsonObject();</span>
+<span class="nc bnc" id="L18" title="All 4 branches missed.">        boolean isMultimedia = obj.has(&quot;multimedia&quot;) &amp;&amp; obj.get(&quot;multimedia&quot;).getAsBoolean();</span>
+<span class="nc bnc" id="L19" title="All 4 branches missed.">        boolean isExplicit = obj.has(&quot;explicit&quot;) &amp;&amp; obj.get(&quot;explicit&quot;).getAsBoolean();</span>
+
+<span class="nc bnc" id="L21" title="All 2 branches missed.">        if (isMultimedia) {</span>
+<span class="nc" id="L22">            MultimediaSong song = delegateGson.fromJson(json, MultimediaSong.class);</span>
+<span class="nc bnc" id="L23" title="All 2 branches missed.">            if (obj.has(&quot;videoLink&quot;)) {</span>
+<span class="nc" id="L24">                song.setVideoLink(obj.get(&quot;videoLink&quot;).getAsString());</span>
+            }
+<span class="nc" id="L26">            return song;</span>
+<span class="nc bnc" id="L27" title="All 2 branches missed.">        } else if (isExplicit) {</span>
+<span class="nc" id="L28">            return delegateGson.fromJson(json, ExplicitSong.class);</span>
+        } else {
+<span class="nc" id="L30">            return delegateGson.fromJson(json, Song.class);</span>
+        }
+    }
+
+    @Override
+    public JsonElement serialize(Song src, Type typeOfSrc, JsonSerializationContext context) {
+<span class="nc" id="L36">        JsonObject obj = delegateGson.toJsonTree(src, src.getClass()).getAsJsonObject();</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        if (src instanceof MultimediaSong) {</span>
+<span class="nc" id="L38">            obj.addProperty(&quot;multimedia&quot;, true);</span>
+<span class="nc" id="L39">            String videoLink = ((MultimediaSong) src).getVideoLink();</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">            if (videoLink != null) {</span>
+<span class="nc" id="L41">                obj.addProperty(&quot;videoLink&quot;, videoLink);</span>
+            }
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        } else if (src instanceof ExplicitSong) {</span>
+<span class="nc" id="L44">            obj.addProperty(&quot;explicit&quot;, true);</span>
+        }
+<span class="nc" id="L46">        return obj;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AdminUI.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">GrupoTP-37</a> &gt; <a href="index.source.html" class="el_package">org.spotifumtp37.delegate</a> &gt; <span class="el_source">AdminUI.java</span></div><h1>AdminUI.java</h1><pre class="source lang-java linenums">package org.spotifumtp37.delegate;
+
+import org.spotifumtp37.model.SpotifUMData;
+import org.spotifumtp37.model.album.Album;
+import org.spotifumtp37.model.album.Song;
+import org.spotifumtp37.exceptions.AlreadyExistsException;
+import org.spotifumtp37.exceptions.DoesntExistException;
+import org.spotifumtp37.model.playlist.Playlist;
+import org.spotifumtp37.model.user.User;
+import org.spotifumtp37.util.JsonDataParser;
+import org.spotifumtp37.util.Stats;
+
+import java.io.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
+import java.util.*;
+
+public class AdminUI {
+    private final JsonDataParser parser;
+    private final Scanner scanner;
+    private final SpotifUMData modelData;
+
+<span class="nc" id="L24">    public AdminUI(SpotifUMData modelData, Scanner scanner) {</span>
+<span class="nc" id="L25">        this.modelData = modelData;</span>
+<span class="nc" id="L26">        this.scanner = scanner;</span>
+<span class="nc" id="L27">        this.parser = new JsonDataParser();</span>
+<span class="nc" id="L28">    }</span>
+
+    public void showAdminMenu() {
+<span class="nc" id="L31">        NewMenu adminMenu = new NewMenu(new String[]{</span>
+                &quot;Manage Albums&quot;,
+                &quot;Manage Users&quot;,
+                &quot;Manage Playlists&quot;,
+                &quot;Manage Data&quot;,
+                &quot;View System Stats / Execute Queries&quot;
+        });
+
+<span class="nc" id="L39">        adminMenu.setHandler(1, this::showAlbumManagementMenu);</span>
+<span class="nc" id="L40">        adminMenu.setHandler(2, this::showUserManagementMenu);</span>
+<span class="nc" id="L41">        adminMenu.setHandler(3, this::showPlaylistManagementMenu);</span>
+<span class="nc" id="L42">        adminMenu.setHandler(4, this::showDataMenu);</span>
+<span class="nc" id="L43">        adminMenu.setHandler(5, this::showStatisticsMenu);</span>
+
+<span class="nc" id="L45">        adminMenu.run();</span>
+<span class="nc" id="L46">    }</span>
+
+    //submenus do admin
+    public void showAlbumManagementMenu() {
+<span class="nc" id="L50">        NewMenu albumMenu = new NewMenu(new String[]{</span>
+                &quot;Add New Album&quot;,
+                &quot;Delete Album&quot;,
+                &quot;View All Albums&quot;
+        });
+
+
+<span class="nc" id="L57">        albumMenu.setHandler(1, this::createAlbum);</span>
+<span class="nc" id="L58">        albumMenu.setHandler(2, this::deleteAlbum);</span>
+<span class="nc" id="L59">        albumMenu.setHandler(3, this::viewAllAlbums);</span>
+
+<span class="nc" id="L61">        albumMenu.run();</span>
+<span class="nc" id="L62">    }</span>
+
+    public void showUserManagementMenu() {
+<span class="nc" id="L65">        NewMenu userManagementMenu = new NewMenu(new String[]{</span>
+                &quot;Delete User&quot;,
+                &quot;View All Users&quot;
+        });
+
+
+<span class="nc" id="L71">        userManagementMenu.setHandler(1, this::deleteUser);</span>
+<span class="nc" id="L72">        userManagementMenu.setHandler(2, this::viewAllUsers);</span>
+
+<span class="nc" id="L74">        userManagementMenu.run();</span>
+<span class="nc" id="L75">    }</span>
+
+    public void showPlaylistManagementMenu() {
+<span class="nc" id="L78">        NewMenu playlistManagementMenu = new NewMenu(new String[]{</span>
+                &quot;Create Playlist&quot;,
+                &quot;Delete Playlist&quot;,
+                &quot;View All Playlists&quot;
+        });
+
+<span class="nc" id="L84">        playlistManagementMenu.setHandler(1, this::createPlaylistAdmin);</span>
+<span class="nc" id="L85">        playlistManagementMenu.setHandler(2, this::deletePlaylistAdmin);</span>
+<span class="nc" id="L86">        playlistManagementMenu.setHandler(3, this::viewAllPlaylists);</span>
+
+<span class="nc" id="L88">        playlistManagementMenu.run();</span>
+<span class="nc" id="L89">    }</span>
+
+    public void showDataMenu() {
+<span class="nc" id="L92">        NewMenu dataMenu = new NewMenu(new String[]{</span>
+                &quot;Import Data from JSON&quot;,
+                &quot;Export Data to JSON&quot;,
+                &quot;Serialize System Data&quot;,
+                &quot;Deserialize System Data&quot;,
+                &quot;Clear System Data&quot;,
+                &quot;DEBUG PRINT DATA&quot;
+        });
+
+<span class="nc" id="L101">        dataMenu.setHandler(1, this::loadData);</span>
+<span class="nc" id="L102">        dataMenu.setHandler(2, this::saveData);</span>
+<span class="nc" id="L103">        dataMenu.setHandler(3, this::serializeData);</span>
+<span class="nc" id="L104">        dataMenu.setHandler(4, this::deserializeData);</span>
+<span class="nc" id="L105">        dataMenu.setHandler(5, this::clearSystemData);</span>
+<span class="nc" id="L106">        dataMenu.setHandler(6, this::printCurrentData);</span>
+
+<span class="nc" id="L108">        dataMenu.run();</span>
+<span class="nc" id="L109">    }</span>
+
+    public void showStatisticsMenu() {
+<span class="nc" id="L112">        NewMenu statsMenu = new NewMenu(new String[]{</span>
+                &quot;Get Most Played Song&quot;,
+                &quot;Get Most Listened Artist&quot;,
+                &quot;Get the all time top Listener (Most Songs Listened)&quot;,
+                &quot;Get Top the top Listener since a given time (Most Songs Listened)&quot;,
+                &quot;Get User With Most Points&quot;,
+                &quot;Get Most Played Genre&quot;,
+                &quot;Count Public Playlists&quot;,
+                &quot;Get User Who Created Most Playlists&quot;
+        });
+
+<span class="nc" id="L123">        statsMenu.setHandler(1, () -&gt; {</span>
+<span class="nc" id="L124">            Song song = Stats.getMostPlayedSong(modelData.getMapAlbumsCopy());</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">            if (song != null) {</span>
+<span class="nc" id="L126">                System.out.println(&quot;Most Played Song: &quot; + song.getName() + &quot; by &quot; + song.getArtist() +</span>
+<span class="nc" id="L127">                        &quot; (Played &quot; + song.getTimesPlayed() + &quot; times)&quot;);</span>
+            } else {
+<span class="nc" id="L129">                System.out.println(&quot;No song data available or no songs played.&quot;);</span>
+            }
+<span class="nc" id="L131">        });</span>
+<span class="nc" id="L132">        statsMenu.setHandler(2, () -&gt; {</span>
+<span class="nc" id="L133">            String artist = Stats.getMostListenedArtist(modelData.getMapAlbumsCopy());</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">            if (artist != null) {</span>
+<span class="nc" id="L135">                System.out.println(&quot;Most Listened Artist: &quot; + artist);</span>
+            } else {
+<span class="nc" id="L137">                System.out.println(&quot;No artist data available or no songs played.&quot;);</span>
+            }
+<span class="nc" id="L139">        });</span>
+<span class="nc" id="L140">        statsMenu.setHandler(3, () -&gt; {</span>
+<span class="nc" id="L141">            User user = Stats.getTopListener(modelData.getMapUsers());</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">            if (user != null) {</span>
+<span class="nc" id="L143">                System.out.println(&quot;Top Listener (Most Songs Listened): &quot; + user.getName() +</span>
+<span class="nc" id="L144">                        &quot; (Listening History Size: &quot; + user.getHistory().size() + &quot;)&quot;);</span>
+            } else {
+<span class="nc" id="L146">                System.out.println(&quot;No user data available.&quot;);</span>
+            }
+<span class="nc" id="L148">        });</span>
+<span class="nc" id="L149">        statsMenu.setHandler(4, this::handleTopListenerFromDate);</span>
+<span class="nc" id="L150">        statsMenu.setHandler(5, () -&gt; {</span>
+<span class="nc" id="L151">            User user = Stats.getUserWithMostPoints(modelData.getMapUsers());</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">            if (user != null) {</span>
+<span class="nc" id="L153">                System.out.println(&quot;User With Most Points: &quot; + user.getName() +</span>
+<span class="nc" id="L154">                        &quot; (Points: &quot; + user.getPontos() + &quot;)&quot;);</span>
+            } else {
+<span class="nc" id="L156">                System.out.println(&quot;No user data available for points calculation.&quot;);</span>
+            }
+<span class="nc" id="L158">        });</span>
+<span class="nc" id="L159">        statsMenu.setHandler(6, () -&gt; {</span>
+<span class="nc" id="L160">            String genre = Stats.mostListenedGenre(modelData.getMapUsers());</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">            if (genre != null) {</span>
+<span class="nc" id="L162">                System.out.println(&quot;Most Played Genre: &quot; + genre);</span>
+            } else {
+<span class="nc" id="L164">                System.out.println(&quot;No genre data available from user histories.&quot;);</span>
+            }
+<span class="nc" id="L166">        });</span>
+
+<span class="nc" id="L168">        statsMenu.setHandler(7, () -&gt; {</span>
+<span class="nc" id="L169">            long count = Stats.countPublicPlaylists(modelData.getMapPlaylists());</span>
+<span class="nc" id="L170">            System.out.println(&quot;Number of Public Playlists: &quot; + count);</span>
+<span class="nc" id="L171">        });</span>
+
+<span class="nc" id="L173">        statsMenu.setHandler(8, () -&gt; {</span>
+<span class="nc" id="L174">            User user = Stats.userWithMostPlaylists(modelData.getMapPlaylists());</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">            if (user != null) {</span>
+<span class="nc" id="L176">                System.out.println(&quot;User Who Created Most Playlists: &quot; + user.getName());</span>
+            } else {
+<span class="nc" id="L178">                System.out.println(&quot;No playlist data available or no creators found.&quot;);</span>
+            }
+<span class="nc" id="L180">        });</span>
+
+<span class="nc" id="L182">        statsMenu.run();</span>
+<span class="nc" id="L183">    }</span>
+
+    //handlers
+
+    public void handleTopListenerFromDate() {
+<span class="nc" id="L188">        System.out.print(&quot;Enter start date (yyyy-MM-dd): &quot;);</span>
+<span class="nc" id="L189">        String input = scanner.nextLine().trim();</span>
+        LocalDate startDate;
+        try {
+<span class="nc" id="L192">            startDate = LocalDate.parse(input);</span>
+<span class="nc" id="L193">        } catch (DateTimeParseException ex) {</span>
+<span class="nc" id="L194">            System.out.println(&quot;Invalid date format. Please use yyyy-MM-dd.&quot;);</span>
+<span class="nc" id="L195">            return;</span>
+<span class="nc" id="L196">        }</span>
+<span class="nc" id="L197">        LocalDateTime fromDate = startDate.atStartOfDay();</span>
+
+<span class="nc" id="L199">        User top = Stats.getTopListenerFromDate(modelData.getMapUsers(), fromDate);</span>
+<span class="nc bnc" id="L200" title="All 2 branches missed.">        if (top != null) {</span>
+<span class="nc" id="L201">            System.out.println(&quot;User who listened to the most songs since &quot; + startDate + &quot;: &quot; + top.getName());</span>
+        } else {
+<span class="nc" id="L203">            System.out.println(&quot;No user history found for the given period.&quot;);</span>
+        }
+<span class="nc" id="L205">    }</span>
+
+
+    public void saveData() {
+<span class="nc" id="L209">        System.out.print(&quot;Enter file path to save: &quot;);</span>
+<span class="nc" id="L210">        String path = scanner.nextLine();</span>
+        try {
+<span class="nc" id="L212">            this.saveToJson(path);</span>
+<span class="nc" id="L213">            System.out.println(&quot;Data saved successfully!&quot;);</span>
+<span class="nc" id="L214">        } catch (IOException e) {</span>
+<span class="nc" id="L215">            System.out.println(&quot;Error saving data: &quot; + e.getMessage());</span>
+<span class="nc" id="L216">        }</span>
+<span class="nc" id="L217">    }</span>
+
+    public void loadData() {
+<span class="nc" id="L220">        System.out.print(&quot;Enter file path to load: &quot;);</span>
+<span class="nc" id="L221">        String path = scanner.nextLine();</span>
+        try {
+<span class="nc" id="L223">            this.loadFromJson(path);</span>
+<span class="nc" id="L224">            System.out.println(&quot;Data loaded successfully!&quot;);</span>
+<span class="nc" id="L225">        } catch (IOException e) {</span>
+<span class="nc" id="L226">            System.out.println(&quot;Error loading data: &quot; + e.getMessage());</span>
+<span class="nc" id="L227">        }</span>
+<span class="nc" id="L228">    }</span>
+
+    public void loadFromJson(String filePath) throws IOException {
+<span class="nc" id="L231">        SpotifUMData loaded = parser.fromJsonData(filePath);</span>
+<span class="nc" id="L232">        modelData.setMapAlbums(loaded.getMapAlbumsCopy());</span>
+<span class="nc" id="L233">        modelData.setMapUsers(loaded.getMapUsers());</span>
+<span class="nc" id="L234">        modelData.setMapPlaylists(loaded.getMapPlaylists());</span>
+<span class="nc" id="L235">    }</span>
+
+    public void saveToJson(String filePath) throws IOException {
+<span class="nc" id="L238">        parser.toJsonData(modelData, filePath);</span>
+<span class="nc" id="L239">    }</span>
+
+    public void serializeData() {
+<span class="nc" id="L242">        System.out.print(&quot;Enter filename to save serialized data (data/serial/spotifumdata.ser suggested): &quot;);</span>
+<span class="nc" id="L243">        String filename = scanner.nextLine().trim();</span>
+
+<span class="nc" id="L245">        try (FileOutputStream fileOut = new FileOutputStream(filename)) {</span>
+<span class="nc" id="L246">            try (ObjectOutputStream out = new ObjectOutputStream(fileOut)) {</span>
+<span class="nc" id="L247">                out.writeObject(modelData);</span>
+<span class="nc" id="L248">                System.out.println(&quot;Data serialized successfully!&quot;);</span>
+<span class="nc" id="L249">            } catch (IOException e) {</span>
+<span class="nc" id="L250">                System.out.println(&quot;Error serializing data: &quot; + e.getMessage());</span>
+<span class="nc" id="L251">            }</span>
+<span class="nc" id="L252">        } catch (IOException e) {</span>
+<span class="nc" id="L253">            System.out.println(&quot;Error serializing data: &quot; + e.getMessage());</span>
+<span class="nc" id="L254">        }</span>
+<span class="nc" id="L255">    }</span>
+
+    public void deserializeData() {
+<span class="nc" id="L258">        System.out.print(&quot;Enter filename to load serialized data (data/serial/spotifumdata.ser suggested): &quot;);</span>
+<span class="nc" id="L259">        String filename = scanner.nextLine().trim();</span>
+
+<span class="nc" id="L261">        try (FileInputStream fileIn = new FileInputStream(filename)) {</span>
+<span class="nc" id="L262">            try (ObjectInputStream in = new ObjectInputStream(fileIn)) {</span>
+<span class="nc" id="L263">                SpotifUMData deserializedData = (SpotifUMData) in.readObject();</span>
+<span class="nc" id="L264">                this.modelData.setMapAlbums(deserializedData.getMapAlbumsCopy());</span>
+<span class="nc" id="L265">                this.modelData.setMapUsers(deserializedData.getMapUsers());</span>
+<span class="nc" id="L266">                this.modelData.setMapPlaylists(deserializedData.getMapPlaylists());</span>
+
+<span class="nc" id="L268">                System.out.println(&quot;Data deserialized successfully!&quot;);</span>
+<span class="nc" id="L269">            } catch (IOException | ClassNotFoundException e) {</span>
+<span class="nc" id="L270">                System.out.println(&quot;Error deserializing data: &quot; + e.getMessage());</span>
+<span class="nc" id="L271">            }</span>
+<span class="nc" id="L272">        } catch (IOException e) {</span>
+<span class="nc" id="L273">            System.out.println(&quot;Error deserializing data: &quot; + e.getMessage());</span>
+<span class="nc" id="L274">        }</span>
+<span class="nc" id="L275">    }</span>
+
+    public void clearSystemData() {
+<span class="nc" id="L278">        modelData.setMapAlbums(new HashMap&lt;&gt;());</span>
+<span class="nc" id="L279">        modelData.setMapUsers(new HashMap&lt;&gt;());</span>
+<span class="nc" id="L280">        modelData.setMapPlaylists(new HashMap&lt;&gt;());</span>
+<span class="nc" id="L281">        System.out.println(&quot; SpotifUMData has been cleared.&quot;);</span>
+<span class="nc" id="L282">    }</span>
+
+    public void printCurrentData() {
+<span class="nc" id="L285">        System.out.println(modelData.toString());</span>
+<span class="nc" id="L286">    }</span>
+
+    public void createAlbum() {
+<span class="nc" id="L289">        System.out.println(&quot;Admin: Create New Album&quot;);</span>
+
+        String title;
+<span class="nc" id="L292">        System.out.print(&quot;Album title: &quot;);</span>
+<span class="nc" id="L293">        title = scanner.nextLine().trim();</span>
+<span class="nc bnc" id="L294" title="All 2 branches missed.">        while (this.modelData.existsAlbum(title)) {</span>
+<span class="nc" id="L295">            System.out.print(&quot;An Album with this title already exists. Please choose another title: &quot;);</span>
+<span class="nc" id="L296">            title = scanner.nextLine().trim();</span>
+        }
+
+<span class="nc" id="L299">        System.out.print(&quot;Artist: &quot;);</span>
+<span class="nc" id="L300">        String artist = scanner.nextLine().trim();</span>
+
+<span class="nc" id="L302">        int ano = 0;</span>
+        do {
+<span class="nc" id="L304">            System.out.print(&quot;Release Year (ex: 1973): &quot;);</span>
+            try {
+<span class="nc" id="L306">                ano = Integer.parseInt(scanner.nextLine().trim());</span>
+<span class="nc" id="L307">            } catch (NumberFormatException e) {</span>
+<span class="nc" id="L308">                System.out.println(&quot;Please type an integer.&quot;);</span>
+<span class="nc" id="L309">            }</span>
+<span class="nc bnc" id="L310" title="All 4 branches missed.">            if (ano &lt;= 1900 || ano &gt; LocalDate.now().getYear()) {</span>
+<span class="nc" id="L311">                System.out.println(&quot;Please type a valid year (between 1900 and today's).&quot;);</span>
+<span class="nc" id="L312">                ano = 0;</span>
+            }
+<span class="nc bnc" id="L314" title="All 2 branches missed.">        } while (ano == 0);</span>
+
+<span class="nc" id="L316">        System.out.print(&quot;Genre: &quot;);</span>
+<span class="nc" id="L317">        String genre = scanner.nextLine().trim();</span>
+
+<span class="nc" id="L319">        Album album = new Album(title, artist, ano, genre, new ArrayList&lt;&gt;());</span>
+
+        int nSongs;
+        do {
+<span class="nc" id="L323">            System.out.print(&quot;How many songs will this album have?&quot;);</span>
+            try {
+<span class="nc" id="L325">                nSongs = Integer.parseInt(scanner.nextLine().trim());</span>
+<span class="nc" id="L326">            } catch (NumberFormatException e) {</span>
+<span class="nc" id="L327">                nSongs = 0;</span>
+<span class="nc" id="L328">            }</span>
+<span class="nc bnc" id="L329" title="All 2 branches missed.">            if (nSongs &lt;= 0) {</span>
+<span class="nc" id="L330">                System.out.println(&quot;Please type a number greater than 0.&quot;);</span>
+            }
+<span class="nc bnc" id="L332" title="All 2 branches missed.">        } while (nSongs &lt;= 0);</span>
+
+<span class="nc bnc" id="L334" title="All 2 branches missed.">        for (int i = 1; i &lt;= nSongs; i++) {</span>
+<span class="nc" id="L335">            System.out.printf(&quot;---- Song %d/%d ----%n&quot;, i, nSongs);</span>
+
+<span class="nc" id="L337">            System.out.print(&quot;Song name: &quot;);</span>
+<span class="nc" id="L338">            String SongName = scanner.nextLine().trim();</span>
+
+<span class="nc" id="L340">            System.out.print(&quot;Publisher: &quot;);</span>
+<span class="nc" id="L341">            String publisher = scanner.nextLine().trim();</span>
+
+<span class="nc" id="L343">            System.out.print(&quot;Lyrics: &quot;);</span>
+<span class="nc" id="L344">            String lyrics = scanner.nextLine().trim();</span>
+
+<span class="nc" id="L346">            System.out.print(&quot;Musical Notes: &quot;);</span>
+<span class="nc" id="L347">            String musicalNotes = scanner.nextLine().trim();</span>
+
+<span class="nc" id="L349">            System.out.print(&quot;The song's genre: &quot;);</span>
+<span class="nc" id="L350">            String musicGenre = scanner.nextLine().trim();</span>
+
+            int duration;
+            do {
+<span class="nc" id="L354">                System.out.print(&quot;Duration (seconds): &quot;);</span>
+                try {
+<span class="nc" id="L356">                    duration = Integer.parseInt(scanner.nextLine().trim());</span>
+<span class="nc" id="L357">                } catch (NumberFormatException e) {</span>
+<span class="nc" id="L358">                    duration = 0;</span>
+<span class="nc" id="L359">                }</span>
+<span class="nc bnc" id="L360" title="All 2 branches missed.">                if (duration &lt;= 0) {</span>
+<span class="nc" id="L361">                    System.out.println(&quot;Please type a number greater than 0.&quot;);</span>
+                }
+<span class="nc bnc" id="L363" title="All 2 branches missed.">            } while (duration &lt;= 0);</span>
+
+<span class="nc" id="L365">            System.out.print(&quot;Is the Song Explicit? (y/n): &quot;);</span>
+<span class="nc" id="L366">            boolean isExplicit = scanner.nextLine().trim().equalsIgnoreCase(&quot;y&quot;);</span>
+<span class="nc" id="L367">            boolean isMultimedia = false;</span>
+<span class="nc bnc" id="L368" title="All 2 branches missed.">            if (!isExplicit) {</span>
+<span class="nc" id="L369">                System.out.println(&quot;Does this song have a Music Video? (y/n): &quot;);</span>
+<span class="nc" id="L370">                isMultimedia = scanner.nextLine().trim().equalsIgnoreCase(&quot;y&quot;);</span>
+            }
+<span class="nc" id="L372">            String videoLink = &quot;&quot;;</span>
+<span class="nc bnc" id="L373" title="All 2 branches missed.">            if (isMultimedia) {</span>
+<span class="nc" id="L374">                System.out.println(&quot;Type the link for the music video:&quot;);</span>
+<span class="nc" id="L375">                videoLink = scanner.nextLine().trim();</span>
+            }
+<span class="nc" id="L377">            album.addSong(SongName, publisher, lyrics, musicalNotes, musicGenre, duration, isExplicit, isMultimedia, videoLink);</span>
+<span class="nc" id="L378">            System.out.println(&quot;Song added to album successfully!&quot;);</span>
+        }
+
+        try {
+<span class="nc" id="L382">            album.setCurrentSong();</span>
+<span class="nc" id="L383">            this.modelData.addAlbum(album);</span>
+<span class="nc" id="L384">            System.out.println(&quot;Album created successfully!&quot;);</span>
+<span class="nc" id="L385">        } catch (AlreadyExistsException e) {</span>
+<span class="nc" id="L386">            System.out.println(&quot;Error. An album with that title already exists.&quot; + e.getMessage());</span>
+<span class="nc" id="L387">        }</span>
+<span class="nc" id="L388">    }</span>
+
+    public void deleteAlbum() {
+<span class="nc" id="L391">        System.out.println(&quot;Admin: Delete Album&quot;);</span>
+<span class="nc" id="L392">        System.out.print(&quot;Title of the album to delete: &quot;);</span>
+<span class="nc" id="L393">        String title = scanner.nextLine().trim();</span>
+
+<span class="nc bnc" id="L395" title="All 2 branches missed.">        while (!modelData.existsAlbum(title)) {</span>
+<span class="nc" id="L396">            System.out.print(&quot;Album not found. Enter another title (or 'exit' to cancel): &quot;);</span>
+<span class="nc" id="L397">            title = scanner.nextLine().trim();</span>
+<span class="nc bnc" id="L398" title="All 2 branches missed.">            if (title.equalsIgnoreCase(&quot;exit&quot;)) {</span>
+<span class="nc" id="L399">                System.out.println(&quot;Operation canceled.&quot;);</span>
+<span class="nc" id="L400">                return;</span>
+            }
+        }
+
+<span class="nc" id="L404">        System.out.printf(&quot;Are you sure you want to delete the album '%s'? (y/n): &quot;, title);</span>
+<span class="nc" id="L405">        String confirm = scanner.nextLine().trim();</span>
+<span class="nc bnc" id="L406" title="All 2 branches missed.">        if (!confirm.equalsIgnoreCase(&quot;y&quot;)) {</span>
+<span class="nc" id="L407">            System.out.println(&quot;Operation Cancelled.&quot;);</span>
+<span class="nc" id="L408">            return;</span>
+        }
+
+        try {
+<span class="nc" id="L412">            modelData.removeAlbum(title);</span>
+<span class="nc" id="L413">            System.out.println(&quot;Album deleted successfully.&quot;);</span>
+<span class="nc" id="L414">        } catch (DoesntExistException e) {</span>
+<span class="nc" id="L415">            System.out.println(&quot;Error album not found.&quot;);</span>
+<span class="nc" id="L416">        }</span>
+<span class="nc" id="L417">    }</span>
+
+    public void createPlaylistAdmin() {
+<span class="nc" id="L420">        System.out.println(&quot;Admin: Create Playlist&quot;);</span>
+<span class="nc" id="L421">        scanner.nextLine();</span>
+
+<span class="nc" id="L423">        User playlistOwner = null;</span>
+<span class="nc" id="L424">        System.out.print(&quot;Enter username of the playlist owner (leave blank for a general/system playlist): &quot;);</span>
+<span class="nc" id="L425">        String ownerUsername = scanner.nextLine().trim();</span>
+<span class="nc bnc" id="L426" title="All 2 branches missed.">        if (!ownerUsername.isEmpty()) {</span>
+            try {
+<span class="nc" id="L428">                playlistOwner = modelData.getUser(ownerUsername);</span>
+<span class="nc" id="L429">            } catch (DoesntExistException e) {</span>
+<span class="nc" id="L430">                System.out.println(&quot;User '&quot; + ownerUsername + &quot;' not found. Playlist will be general if you proceed without a valid owner.&quot;);</span>
+<span class="nc" id="L431">            }</span>
+        }
+
+<span class="nc" id="L434">        List&lt;Song&gt; songs = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L435">        System.out.println(&quot;Enter the name for the new playlist: &quot;);</span>
+<span class="nc" id="L436">        String nomePlaylist = scanner.nextLine().trim();</span>
+
+<span class="nc bnc" id="L438" title="All 2 branches missed.">        while (this.modelData.existsPlaylist(nomePlaylist)) {</span>
+<span class="nc" id="L439">            System.out.println(&quot;A playlist with this name already exists. Please choose another name: &quot;);</span>
+<span class="nc" id="L440">            nomePlaylist = scanner.nextLine().trim();</span>
+        }
+<span class="nc" id="L442">        System.out.println(&quot;Give the playlist a description:&quot;);</span>
+<span class="nc" id="L443">        String playlistDescription = scanner.nextLine().trim();</span>
+        String estado;
+        do {
+<span class="nc" id="L446">            System.out.println(&quot;Estado (private ou public):&quot;);</span>
+<span class="nc" id="L447">            estado = scanner.nextLine().trim();</span>
+<span class="nc bnc" id="L448" title="All 2 branches missed.">            if (!estado.equalsIgnoreCase(&quot;private&quot;)</span>
+<span class="nc bnc" id="L449" title="All 2 branches missed.">                    &amp;&amp; !estado.equalsIgnoreCase(&quot;public&quot;)) {</span>
+<span class="nc" id="L450">                System.out.println(&quot;Invalid Option! Write only 'private' ou 'public'.&quot;);</span>
+            }
+<span class="nc bnc" id="L452" title="All 2 branches missed.">        } while (!estado.equalsIgnoreCase(&quot;private&quot;)</span>
+<span class="nc bnc" id="L453" title="All 2 branches missed.">                &amp;&amp; !estado.equalsIgnoreCase(&quot;public&quot;));</span>
+        int n;
+<span class="nc" id="L455">        System.out.println(&quot;How many songs to add initially?: &quot;);</span>
+<span class="nc bnc" id="L456" title="All 2 branches missed.">        while (!scanner.hasNextInt()) {</span>
+<span class="nc" id="L457">            System.out.println(&quot;That's not a valid number. Please enter an integer:&quot;);</span>
+<span class="nc" id="L458">            scanner.next();</span>
+        }
+<span class="nc" id="L460">        n = scanner.nextInt();</span>
+<span class="nc" id="L461">        scanner.nextLine();</span>
+
+<span class="nc bnc" id="L463" title="All 2 branches missed.">        while (n &lt;= 0) {</span>
+<span class="nc" id="L464">            System.out.println(&quot;Type a number greater than 0: &quot;);</span>
+<span class="nc bnc" id="L465" title="All 2 branches missed.">            while (!scanner.hasNextInt()) {</span>
+<span class="nc" id="L466">                System.out.println(&quot;That's not a valid number. Please enter an integer:&quot;);</span>
+<span class="nc" id="L467">                scanner.next();</span>
+            }
+<span class="nc" id="L469">            n = scanner.nextInt();</span>
+<span class="nc" id="L470">            scanner.nextLine();</span>
+        }
+
+<span class="nc bnc" id="L473" title="All 2 branches missed.">        while (n &gt; 0) {</span>
+            while (true) {
+<span class="nc" id="L475">                System.out.println(&quot;Type the name of the album of the song you want to add to the playlist: &quot;);</span>
+<span class="nc" id="L476">                String nomeAlbum = scanner.nextLine().trim();</span>
+
+                try {
+<span class="nc" id="L479">                    Album album = this.modelData.getAlbum(nomeAlbum);</span>
+<span class="nc" id="L480">                    System.out.println(&quot;Songs in album '&quot; + album.getTitle() + &quot;':&quot;);</span>
+<span class="nc" id="L481">                    album.getSongsCopy().forEach(song -&gt; System.out.println(&quot;- &quot; + song.getName()));</span>
+                    while (true) {
+<span class="nc" id="L483">                        System.out.println(&quot;Type the name of the song you want to add to the playlist: &quot;);</span>
+<span class="nc" id="L484">                        String musicName = scanner.nextLine().trim();</span>
+                        try {
+<span class="nc" id="L486">                            songs.add(this.modelData.getSong(musicName, nomeAlbum));</span>
+<span class="nc" id="L487">                            System.out.println(&quot;Song '&quot; + musicName + &quot;' added to playlist&quot;);</span>
+<span class="nc" id="L488">                            break;</span>
+<span class="nc" id="L489">                        } catch (DoesntExistException e) {</span>
+<span class="nc" id="L490">                            System.out.println(&quot;Incorrect song name, does not exist in album '&quot; + nomeAlbum + &quot;'. Try again.&quot;);</span>
+                        }
+<span class="nc" id="L492">                    }</span>
+<span class="nc" id="L493">                    break;</span>
+
+<span class="nc" id="L495">                } catch (DoesntExistException e) {</span>
+<span class="nc" id="L496">                    System.out.println(&quot;Incorrect album name, does not exist. Try again.&quot;);</span>
+                }
+<span class="nc" id="L498">            }</span>
+<span class="nc" id="L499">            n--;</span>
+        }
+
+<span class="nc" id="L502">        Playlist playlist = new Playlist(playlistOwner, nomePlaylist, playlistDescription, 0, estado, songs);</span>
+        try {
+<span class="nc" id="L504">            this.modelData.addPlaylist(playlist);</span>
+<span class="nc" id="L505">            System.out.println(&quot;Playlist '&quot; + nomePlaylist + &quot;' created successfully!&quot;);</span>
+<span class="nc" id="L506">        } catch (AlreadyExistsException e) {</span>
+<span class="nc" id="L507">            System.out.println(&quot;Error: A playlist with that name already exists.&quot;);</span>
+<span class="nc" id="L508">        }</span>
+<span class="nc" id="L509">    }</span>
+
+
+    public void deletePlaylistAdmin() {
+<span class="nc" id="L513">        scanner.nextLine();</span>
+<span class="nc" id="L514">        System.out.println(&quot;Admin: Delete Playlist&quot;);</span>
+<span class="nc" id="L515">        System.out.print(&quot;Enter the name of the playlist to delete: &quot;);</span>
+<span class="nc" id="L516">        String nome = scanner.nextLine().trim();</span>
+
+<span class="nc bnc" id="L518" title="All 2 branches missed.">        if (!modelData.existsPlaylist(nome)) {</span>
+<span class="nc" id="L519">            System.out.println(&quot;Playlist not found.&quot;);</span>
+<span class="nc" id="L520">            return;</span>
+        }
+
+<span class="nc" id="L523">        System.out.printf(&quot;Are you sure you want to delete the playlist '%s'? (y/n): &quot;, nome);</span>
+<span class="nc" id="L524">        String confirm = scanner.nextLine().trim();</span>
+<span class="nc bnc" id="L525" title="All 2 branches missed.">        if (!confirm.equalsIgnoreCase(&quot;y&quot;)) {</span>
+<span class="nc" id="L526">            System.out.println(&quot;Operation cancelled.&quot;);</span>
+<span class="nc" id="L527">            return;</span>
+        }
+
+        try {
+<span class="nc" id="L531">            modelData.removePlaylist(nome);</span>
+<span class="nc" id="L532">            System.out.println(&quot;Playlist '&quot; + nome + &quot;' deleted successfully!&quot;);</span>
+<span class="nc" id="L533">        } catch (DoesntExistException e) {</span>
+<span class="nc" id="L534">            System.out.println(&quot;Error: Playlist not found during deletion attempt.&quot;);</span>
+<span class="nc" id="L535">        }</span>
+<span class="nc" id="L536">    }</span>
+
+    public void viewAllAlbums() {
+<span class="nc" id="L539">        System.out.println(&quot;\n--- All Albums ---&quot;);</span>
+<span class="nc" id="L540">        Map&lt;String, Album&gt; albums = modelData.getMapAlbumsCopy();</span>
+
+<span class="nc bnc" id="L542" title="All 2 branches missed.">        if (albums.isEmpty()) {</span>
+<span class="nc" id="L543">            System.out.println(&quot;No albums found in the system.&quot;);</span>
+<span class="nc" id="L544">            return;</span>
+        }
+
+<span class="nc bnc" id="L547" title="All 2 branches missed.">        for (Album album : albums.values()) {</span>
+<span class="nc" id="L548">            System.out.println(album.toString());</span>
+<span class="nc" id="L549">            System.out.println(&quot;----------------------------------------&quot;);</span>
+<span class="nc" id="L550">        }</span>
+<span class="nc" id="L551">        System.out.println(albums.size() + &quot; album(s) listed.&quot;);</span>
+<span class="nc" id="L552">    }</span>
+
+    public void viewAllPlaylists() {
+<span class="nc" id="L555">        System.out.println(&quot;\n--- All Playlists ---&quot;);</span>
+<span class="nc" id="L556">        Map&lt;String, Playlist&gt; playlists = modelData.getMapPlaylists();</span>
+
+<span class="nc bnc" id="L558" title="All 2 branches missed.">        if (playlists.isEmpty()) {</span>
+<span class="nc" id="L559">            System.out.println(&quot;No playlists found in the system.&quot;);</span>
+<span class="nc" id="L560">            return;</span>
+        }
+
+<span class="nc bnc" id="L563" title="All 2 branches missed.">        for (Playlist playlist : playlists.values()) {</span>
+<span class="nc" id="L564">            System.out.println(playlist.toString());</span>
+<span class="nc" id="L565">            System.out.println(&quot;----------------------------------------&quot;);</span>
+<span class="nc" id="L566">        }</span>
+<span class="nc" id="L567">        System.out.println(playlists.size() + &quot; playlist(s) listed.&quot;);</span>
+
+<span class="nc" id="L569">    }</span>
+
+    public void viewAllUsers() {
+<span class="nc" id="L572">        System.out.println(&quot;\n--- All Users ---&quot;);</span>
+<span class="nc" id="L573">        Map&lt;String, User&gt; users = modelData.getMapUsers();</span>
+
+<span class="nc bnc" id="L575" title="All 2 branches missed.">        if (users.isEmpty()) {</span>
+<span class="nc" id="L576">            System.out.println(&quot;No users found in the system.&quot;);</span>
+<span class="nc" id="L577">            return;</span>
+        }
+
+<span class="nc bnc" id="L580" title="All 2 branches missed.">        for (User user : users.values()) {</span>
+            // Assuming User class has a meaningful toString() method
+<span class="nc" id="L582">            System.out.println(user.toString());</span>
+<span class="nc" id="L583">            System.out.println(&quot;----------------------------------------&quot;);</span>
+<span class="nc" id="L584">        }</span>
+<span class="nc" id="L585">        System.out.println(users.size() + &quot; user(s) listed.&quot;);</span>
+<span class="nc" id="L586">    }</span>
+
+    public void deleteUser() {
+<span class="nc" id="L589">        System.out.println(&quot;Admin: Delete User&quot;);</span>
+        // scanner.nextLine(); // Consume any leftover newline from previous input if necessary
+<span class="nc" id="L591">        System.out.print(&quot;Enter the username of the user to delete: &quot;);</span>
+<span class="nc" id="L592">        String username = scanner.nextLine().trim();</span>
+
+<span class="nc bnc" id="L594" title="All 2 branches missed.">        while (!modelData.existsUser(username)) {</span>
+<span class="nc" id="L595">            System.out.print(&quot;User not found. Enter another username (or 'exit' to cancel): &quot;);</span>
+<span class="nc" id="L596">            username = scanner.nextLine().trim();</span>
+<span class="nc bnc" id="L597" title="All 2 branches missed.">            if (username.equalsIgnoreCase(&quot;exit&quot;)) {</span>
+<span class="nc" id="L598">                System.out.println(&quot;Operation canceled.&quot;);</span>
+<span class="nc" id="L599">                return;</span>
+            }
+        }
+
+<span class="nc" id="L603">        System.out.printf(&quot;Are you sure you want to delete the user '%s'? This action cannot be undone. (y/n): &quot;, username);</span>
+<span class="nc" id="L604">        String confirm = scanner.nextLine().trim();</span>
+<span class="nc bnc" id="L605" title="All 2 branches missed.">        if (!confirm.equalsIgnoreCase(&quot;y&quot;)) {</span>
+<span class="nc" id="L606">            System.out.println(&quot;Operation Cancelled.&quot;);</span>
+<span class="nc" id="L607">            return;</span>
+        }
+
+        try {
+<span class="nc" id="L611">            modelData.removeUser(username);</span>
+<span class="nc" id="L612">            System.out.println(&quot;User '&quot; + username + &quot;' deleted successfully.&quot;);</span>
+<span class="nc" id="L613">        } catch (DoesntExistException e) {</span>
+<span class="nc" id="L614">            System.out.println(&quot;Error: User not found during deletion attempt.&quot;);</span>
+<span class="nc" id="L615">        }</span>
+<span class="nc" id="L616">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

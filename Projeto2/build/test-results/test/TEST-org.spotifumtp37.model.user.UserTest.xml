@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.spotifumtp37.model.user.UserTest" tests="25" skipped="0" failures="0" errors="0" timestamp="2026-04-20T11:27:50" hostname="joao-ASUS-TUF-Dash-F15-FX517ZE-FX517ZE" time="0.017">
+  <properties/>
+  <testcase name="createTopGenrePlaylist()" classname="org.spotifumtp37.model.user.UserTest" time="0.001"/>
+  <testcase name="constructors()" classname="org.spotifumtp37.model.user.UserTest" time="0.001"/>
+  <testcase name="getSubscriptionPlan()" classname="org.spotifumtp37.model.user.UserTest" time="0.0"/>
+  <testcase name="createTopGenreExplicitPlaylist()" classname="org.spotifumtp37.model.user.UserTest" time="0.0"/>
+  <testcase name="createTopGenrePlaylistWithinTime()" classname="org.spotifumtp37.model.user.UserTest" time="0.001"/>
+  <testcase name="testClone()" classname="org.spotifumtp37.model.user.UserTest" time="0.001"/>
+  <testcase name="setPassword()" classname="org.spotifumtp37.model.user.UserTest" time="0.0"/>
+  <testcase name="testToString()" classname="org.spotifumtp37.model.user.UserTest" time="0.0"/>
+  <testcase name="getPassword()" classname="org.spotifumtp37.model.user.UserTest" time="0.0"/>
+  <testcase name="updatePremiumTop()" classname="org.spotifumtp37.model.user.UserTest" time="0.001"/>
+  <testcase name="updateHistory()" classname="org.spotifumtp37.model.user.UserTest" time="0.0"/>
+  <testcase name="setHistory()" classname="org.spotifumtp37.model.user.UserTest" time="0.001"/>
+  <testcase name="getAddress()" classname="org.spotifumtp37.model.user.UserTest" time="0.0"/>
+  <testcase name="addPoints()" classname="org.spotifumtp37.model.user.UserTest" time="0.001"/>
+  <testcase name="getName()" classname="org.spotifumtp37.model.user.UserTest" time="0.0"/>
+  <testcase name="setPontos()" classname="org.spotifumtp37.model.user.UserTest" time="0.001"/>
+  <testcase name="getPontos()" classname="org.spotifumtp37.model.user.UserTest" time="0.0"/>
+  <testcase name="setSubscriptionPlan()" classname="org.spotifumtp37.model.user.UserTest" time="0.001"/>
+  <testcase name="getTopGenre()" classname="org.spotifumtp37.model.user.UserTest" time="0.001"/>
+  <testcase name="testEquals()" classname="org.spotifumtp37.model.user.UserTest" time="0.0"/>
+  <testcase name="setEmail()" classname="org.spotifumtp37.model.user.UserTest" time="0.001"/>
+  <testcase name="setAddress()" classname="org.spotifumtp37.model.user.UserTest" time="0.0"/>
+  <testcase name="getEmail()" classname="org.spotifumtp37.model.user.UserTest" time="0.001"/>
+  <testcase name="getHistory()" classname="org.spotifumtp37.model.user.UserTest" time="0.0"/>
+  <testcase name="setName()" classname="org.spotifumtp37.model.user.UserTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PlayerUI.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">GrupoTP-37</a> &gt; <a href="index.source.html" class="el_package">org.spotifumtp37.delegate</a> &gt; <span class="el_source">PlayerUI.java</span></div><h1>PlayerUI.java</h1><pre class="source lang-java linenums">package org.spotifumtp37.delegate;
+
+import org.spotifumtp37.model.album.MultimediaSong;
+import org.spotifumtp37.model.album.Song;
+import org.spotifumtp37.exceptions.SubscriptionDoesNotAllowException;
+import org.spotifumtp37.model.playlist.Playable;
+import org.spotifumtp37.model.user.User;
+
+import java.util.Scanner;
+import java.io.IOException;
+
+public class PlayerUI {
+
+    private final Scanner scanner;
+
+<span class="nc" id="L16">    public PlayerUI(Scanner scanner) {</span>
+<span class="nc" id="L17">        this.scanner = scanner;</span>
+<span class="nc" id="L18">    }</span>
+
+    /**
+     * Play a &quot;playable&quot;: shows lyrics and reacts to next/prev/stop.
+     */
+    public void playSong(Playable playable, User user) throws IOException {
+<span class="nc" id="L24">        boolean continuePlaying = true;</span>
+
+<span class="nc bnc" id="L26" title="All 2 branches missed.">        while (continuePlaying) {</span>
+
+<span class="nc" id="L28">            playable.play(user);</span>
+
+<span class="nc" id="L30">            Song song = playable.getCurrentSong();</span>
+<span class="nc" id="L31">            System.out.printf(&quot;Now playing \&quot;%s\&quot; by %s%n&quot;, song.getName(), song.getArtist());</span>
+<span class="nc bnc" id="L32" title="All 2 branches missed.">            if (song.isExplicit()) {</span>
+<span class="nc" id="L33">                System.out.println(&quot;Attention! This is an explicit song!&quot;);</span>
+            }
+
+<span class="nc bnc" id="L36" title="All 2 branches missed.">            if (song.isMultimedia()) {</span>
+<span class="nc" id="L37">                System.out.println(&quot;This song has a music video!&quot;);</span>
+<span class="nc" id="L38">                System.out.println(&quot;You can watch it at &quot; + ((MultimediaSong) song).getVideoLink());</span>
+            }
+
+<span class="nc" id="L41">            System.out.println(&quot;Lyrics:\n&quot; + song.getLyrics());</span>
+<span class="nc" id="L42">            System.out.println(&quot;\nControls: &quot;);</span>
+<span class="nc" id="L43">            System.out.print(&quot;n=next, &quot;);</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">            if (user.getSubscriptionPlan().canBrowsePlaylist()) {</span>
+<span class="nc" id="L45">                System.out.print(&quot;p=prev, &quot;);</span>
+<span class="nc" id="L46">                System.out.print(&quot;r=shuffle random song, &quot;);</span>
+            }
+<span class="nc" id="L48">            System.out.print(&quot;s=stop\n&quot;);</span>
+<span class="nc" id="L49">            boolean waitingForInput = true;</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">            while (waitingForInput) {</span>
+<span class="nc" id="L51">                System.out.print(&quot;Command: &quot;);</span>
+<span class="nc" id="L52">                String input = scanner.nextLine().trim();</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">                if (input.isEmpty()) continue;</span>
+<span class="nc" id="L54">                char cmd = input.charAt(0);</span>
+<span class="nc bnc" id="L55" title="All 5 branches missed.">                switch (cmd) {</span>
+                    case 'n': // next
+<span class="nc" id="L57">                        playable.next(user);</span>
+<span class="nc" id="L58">                        System.out.println(&quot;Skipping to next...&quot;);</span>
+<span class="nc" id="L59">                        waitingForInput = false;</span>
+<span class="nc" id="L60">                        break;</span>
+                    case 'r': // nextshuffle (para users premium darem shuffle)
+<span class="nc" id="L62">                        playable.nextShuffle();</span>
+<span class="nc" id="L63">                        System.out.println(&quot;Skipping to next on shuffle mode...&quot;);</span>
+<span class="nc" id="L64">                        waitingForInput = false;</span>
+<span class="nc" id="L65">                        break;</span>
+                    case 'p': // prev
+                        try {
+<span class="nc" id="L68">                            playable.previous(user);</span>
+<span class="nc" id="L69">                            System.out.println(&quot;Going to previous...&quot;);</span>
+<span class="nc" id="L70">                        } catch (SubscriptionDoesNotAllowException e) {</span>
+<span class="nc" id="L71">                            System.out.println(&quot;Cannot go back.&quot; + e.getMessage());</span>
+<span class="nc" id="L72">                        }</span>
+<span class="nc" id="L73">                        waitingForInput = false;</span>
+<span class="nc" id="L74">                        break;</span>
+                    case 's': // stop
+<span class="nc" id="L76">                        System.out.println(&quot;Stopped.&quot;);</span>
+<span class="nc" id="L77">                        continuePlaying = false;</span>
+<span class="nc" id="L78">                        waitingForInput = false;</span>
+<span class="nc" id="L79">                        break;</span>
+                    default:
+<span class="nc" id="L81">                        System.out.println(&quot;Unknown command. Try n (next), p (prev), s (stop).&quot;);</span>
+                }
+<span class="nc" id="L83">            }</span>
+<span class="nc" id="L84">            System.out.println(&quot;Track finished.\n&quot;);</span>
+
+<span class="nc" id="L86">        }</span>
+<span class="nc" id="L87">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

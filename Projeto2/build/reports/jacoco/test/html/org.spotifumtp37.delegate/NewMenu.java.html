@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NewMenu.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">GrupoTP-37</a> &gt; <a href="index.source.html" class="el_package">org.spotifumtp37.delegate</a> &gt; <span class="el_source">NewMenu.java</span></div><h1>NewMenu.java</h1><pre class="source lang-java linenums">package org.spotifumtp37.delegate;
+/*********************************************************************************/
+/**
+ * DISCLAIMER: Este código foi criado e alterado durante as aulas práticas
+ */
+/**
+ * de POO. Representa uma solução em construção, com base na matéria leccionada
+ */
+/**
+ * até ao momento da sua elaboração, e resulta da discussão e experimentação
+ */
+/** durante as aulas. Como tal, não deverá ser visto como uma solução canónica,  */
+/** ou mesmo acabada. É disponibilizado para auxiliar o processo de estudo.      */
+/** Os alunos são encorajados a testar adequadamente o código fornecido e a      */
+/** procurar soluções alternativas, à medida que forem adquirindo mais           */
+/** conhecimentos de POO.                                                        */
+/*********************************************************************************/
+
+
+import java.util.*;
+
+/**
+ * Esta classe implementa um NewMenu em modo texto.
+ *
+ * @author José Creissac Campos
+ * @version v3.2 (20201215)
+ * @version v3.3 (20230502)
+ */
+public class NewMenu {
+
+    // Interfaces auxiliares
+
+    /** Functional interface para handlers. */
+    public interface Handler {  // método de tratamento
+        public void execute();
+    }
+
+    /** Functional interface para pré-condições. */
+    /** Podia ser utilizado Predicate&amp;lt;T&amp;gt; */
+    public interface PreCondition {
+        public boolean validate();
+    }
+
+    // Varíável de classe para suportar leitura
+
+<span class="nc" id="L46">    private static Scanner is = new Scanner(System.in);</span>
+
+    // Variáveis de instância
+
+    private List&lt;String&gt; opcoes;            // Lista de opções
+    private List&lt;PreCondition&gt; disponivel;  // Lista de pré-condições
+    private List&lt;Handler&gt; handlers;         // Lista de handlers
+
+    // Construtor
+
+    /**
+     * Constructor for objects of class NewMenu
+     */
+<span class="nc" id="L59">    public NewMenu(String[] opcoes) {</span>
+<span class="nc" id="L60">        this.opcoes = Arrays.asList(opcoes);</span>
+<span class="nc" id="L61">        this.disponivel = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L62">        this.handlers = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L63">        this.opcoes.forEach(s -&gt; {</span>
+<span class="nc" id="L64">            this.disponivel.add(() -&gt; true);</span>
+<span class="nc" id="L65">            this.handlers.add(() -&gt; System.out.println(&quot;\nATENÇÃO: Opção não implementada!&quot;));</span>
+<span class="nc" id="L66">        });</span>
+<span class="nc" id="L67">    }</span>
+
+    // Métodos de instância
+
+    /**
+     * Correr o NewMenu.
+     *
+     * Termina com a opção 0 (zero).
+     */
+    public void run() {
+        int op;
+        do {
+<span class="nc" id="L79">            show();</span>
+<span class="nc" id="L80">            op = readOption();</span>
+            // testar pré-condição
+<span class="nc bnc" id="L82" title="All 4 branches missed.">            if (op &gt; 0 &amp;&amp; !this.disponivel.get(op - 1).validate()) {</span>
+<span class="nc" id="L83">                System.out.println(&quot;Opção indisponível! Tente novamente.&quot;);</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">            } else if (op &gt; 0) {</span>
+                // executar handler
+<span class="nc" id="L86">                this.handlers.get(op - 1).execute();</span>
+            }
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        } while (op != 0);</span>
+<span class="nc" id="L89">    }</span>
+
+    /**
+     * Método que regista uma uma pré-condição numa opção do NewMenu.
+     *
+     * @param i índice da opção (começa em 1)
+     * @param b pré-condição a registar
+     */
+    public void setPreCondition(int i, PreCondition b) {
+<span class="nc" id="L98">        this.disponivel.set(i - 1, b);</span>
+<span class="nc" id="L99">    }</span>
+
+    /**
+     * Método para registar um handler numa opção do NewMenu.
+     *
+     * @param i indice da opção  (começa em 1)
+     * @param h handlers a registar
+     */
+    public void setHandler(int i, Handler h) {
+<span class="nc" id="L108">        this.handlers.set(i - 1, h);</span>
+<span class="nc" id="L109">    }</span>
+
+    // Métodos auxiliares
+
+    /** Apresentar o NewMenu */
+    private void show() {
+<span class="nc" id="L115">        System.out.println(&quot;\n *** SpotifUM *** &quot;);</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        for (int i = 0; i &lt; this.opcoes.size(); i++) {</span>
+<span class="nc" id="L117">            System.out.print(i + 1);</span>
+<span class="nc" id="L118">            System.out.print(&quot; - &quot;);</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">            System.out.println(this.disponivel.get(i).validate() ? this.opcoes.get(i) : &quot;---&quot;);</span>
+        }
+<span class="nc" id="L121">        System.out.println(&quot;0 - Exit&quot;);</span>
+<span class="nc" id="L122">    }</span>
+
+    /** Ler uma opção válida */
+    private int readOption() {
+        int op;
+        //Scanner is = new Scanner(System.in);
+
+<span class="nc" id="L129">        System.out.print(&quot;Option: &quot;);</span>
+        try {
+<span class="nc" id="L131">            String line = is.nextLine();</span>
+<span class="nc" id="L132">            op = Integer.parseInt(line);</span>
+<span class="nc" id="L133">        } catch (NumberFormatException e) { // Não foi escrito um int</span>
+<span class="nc" id="L134">            op = -1;</span>
+<span class="nc" id="L135">        }</span>
+<span class="nc bnc" id="L136" title="All 4 branches missed.">        if (op &lt; 0 || op &gt; this.opcoes.size()) {</span>
+<span class="nc" id="L137">            System.out.println(&quot;Opção Inválida!!!&quot;);</span>
+<span class="nc" id="L138">            op = -1;</span>
+        }
+<span class="nc" id="L140">        return op;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

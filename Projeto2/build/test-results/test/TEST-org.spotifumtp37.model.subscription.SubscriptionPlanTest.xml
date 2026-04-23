@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.spotifumtp37.model.subscription.SubscriptionPlanTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2026-04-20T11:27:50" hostname="joao-ASUS-TUF-Dash-F15-FX517ZE-FX517ZE" time="0.007">
+  <properties/>
+  <testcase name="premiumTopEarnsLessThanBaseForLowPoints()" classname="org.spotifumtp37.model.subscription.SubscriptionPlanTest" time="0.0"/>
+  <testcase name="freePlanCannotBrowsePlaylist()" classname="org.spotifumtp37.model.subscription.SubscriptionPlanTest" time="0.0"/>
+  <testcase name="premiumTopCanBrowsePlaylist()" classname="org.spotifumtp37.model.subscription.SubscriptionPlanTest" time="0.0"/>
+  <testcase name="premiumTopCanAccessFavouritesList()" classname="org.spotifumtp37.model.subscription.SubscriptionPlanTest" time="0.0"/>
+  <testcase name="freePlanCannotAccessFavouritesList()" classname="org.spotifumtp37.model.subscription.SubscriptionPlanTest" time="0.0"/>
+  <testcase name="premiumTopEarnsMoreThanBaseForHighPoints()" classname="org.spotifumtp37.model.subscription.SubscriptionPlanTest" time="0.0"/>
+  <testcase name="premiumBaseCanCreatePlaylist()" classname="org.spotifumtp37.model.subscription.SubscriptionPlanTest" time="0.0"/>
+  <testcase name="premiumTopAddPointsApplies2Point5Percent()" classname="org.spotifumtp37.model.subscription.SubscriptionPlanTest" time="0.0"/>
+  <testcase name="premiumBaseCannotAccessFavouritesList()" classname="org.spotifumtp37.model.subscription.SubscriptionPlanTest" time="0.0"/>
+  <testcase name="freePlanEarnsLessPointsThanPremiumBase()" classname="org.spotifumtp37.model.subscription.SubscriptionPlanTest" time="0.001"/>
+  <testcase name="premiumBaseCanBrowsePlaylist()" classname="org.spotifumtp37.model.subscription.SubscriptionPlanTest" time="0.0"/>
+  <testcase name="premiumBaseAddPointsAdds10()" classname="org.spotifumtp37.model.subscription.SubscriptionPlanTest" time="0.0"/>
+  <testcase name="freePlanCannotCreatePlaylist()" classname="org.spotifumtp37.model.subscription.SubscriptionPlanTest" time="0.0"/>
+  <testcase name="premiumTopCanCreatePlaylist()" classname="org.spotifumtp37.model.subscription.SubscriptionPlanTest" time="0.001"/>
+  <testcase name="freePlanAddPointsAdds5()" classname="org.spotifumtp37.model.subscription.SubscriptionPlanTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

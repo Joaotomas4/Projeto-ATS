@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Playlist.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">GrupoTP-37</a> &gt; <a href="index.source.html" class="el_package">org.spotifumtp37.model.playlist</a> &gt; <span class="el_source">Playlist.java</span></div><h1>Playlist.java</h1><pre class="source lang-java linenums">package org.spotifumtp37.model.playlist;
+
+import org.spotifumtp37.model.album.Song;
+import org.spotifumtp37.exceptions.SubscriptionDoesNotAllowException;
+import org.spotifumtp37.model.user.User;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
+
+/**
+ * Represents a playlist of songs in a music application.
+ * &lt;p&gt;
+ * This class implements both {@link Serializable} for persistence and {@link Playable} for
+ * playback functionality. A playlist contains information about its creator,
+ * a collection of songs, visibility status (public or private), and methods
+ * to manage and play the songs. It also tracks the number of followers
+ * and the currently playing song.
+ * &lt;/p&gt;
+ */
+public class Playlist implements Serializable, Playable {
+    private User creator;
+    private String playlistName;
+    private String playlistDescription;
+    private int numberOfFollowers;
+    private String status; // public or private
+    private List&lt;Song&gt; songs;
+    private Song currentSong;
+
+    /**
+     * Constructs a playlist with the specified attributes.
+     * The initial current song is set to a random song from the provided list.
+     *
+     * @param creator The user who created the playlist.
+     * @param playlistName The name of the playlist.
+     * @param playlistDescription A description of the playlist.
+     * @param numberOfFollowers The initial number of users following this playlist.
+     * @param status The visibility status of the playlist (&quot;public&quot; or &quot;private&quot;).
+     * @param songs The list of songs to include in the playlist. If the list is empty,
+     *              the behavior of setting a current song might be problematic.
+     *              Consider adding a check for an empty song list.
+     */
+<span class="fc" id="L45">    public Playlist(User creator, String playlistName, String playlistDescription, int numberOfFollowers, String status, List&lt;Song&gt; songs) {</span>
+<span class="fc" id="L46">        this.creator = creator;</span>
+<span class="fc" id="L47">        this.playlistName = playlistName;</span>
+<span class="fc" id="L48">        this.playlistDescription = playlistDescription;</span>
+<span class="fc" id="L49">        this.numberOfFollowers = numberOfFollowers;</span>
+<span class="fc" id="L50">        this.status = status;</span>
+<span class="fc" id="L51">        this.songs = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">        if (songs != null) {</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">            for (Song song : songs) {</span>
+<span class="fc" id="L54">                this.songs.add(song.clone());</span>
+<span class="fc" id="L55">            }</span>
+        }
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">        if (!this.songs.isEmpty()) {</span>
+<span class="fc" id="L58">            Random rand = new Random();</span>
+<span class="fc" id="L59">            int randomIndex = rand.nextInt(this.songs.size());</span>
+<span class="fc" id="L60">            this.currentSong = this.songs.get(randomIndex);</span>
+<span class="fc" id="L61">        } else {</span>
+<span class="nc" id="L62">            this.currentSong = null;</span>
+        }
+<span class="fc" id="L64">    }</span>
+
+    /**
+     * Copy constructor that creates a new Playlist as a deep copy of another Playlist.
+     * The songs list is deep-copied. The current song is also initially set randomly
+     * from the copied list of songs.
+     *
+     * @param other The Playlist to copy.
+     */
+<span class="fc" id="L73">    public Playlist(Playlist other) {</span>
+<span class="fc" id="L74">        this.creator = other.creator; // Assuming User is immutable or shared reference is intended</span>
+<span class="fc" id="L75">        this.playlistName = other.playlistName;</span>
+<span class="fc" id="L76">        this.playlistDescription = other.playlistDescription;</span>
+<span class="fc" id="L77">        this.numberOfFollowers = other.numberOfFollowers;</span>
+<span class="fc" id="L78">        this.status = other.status;</span>
+<span class="fc" id="L79">        this.songs = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">        if (other.songs != null) {</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">            for (Song song : other.songs) {</span>
+<span class="fc" id="L82">                this.songs.add(song.clone()); // Assuming Song has a clone method</span>
+<span class="fc" id="L83">            }</span>
+        }
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">        if (!this.songs.isEmpty()) {</span>
+<span class="fc" id="L86">            Random rand = new Random();</span>
+            // Ensure currentSong is from the *new* list of songs
+<span class="fc" id="L88">            int randomIndex = rand.nextInt(this.songs.size());</span>
+<span class="fc" id="L89">            this.currentSong = this.songs.get(randomIndex);</span>
+<span class="fc" id="L90">        } else {</span>
+<span class="nc" id="L91">            this.currentSong = null;</span>
+        }
+<span class="fc" id="L93">    }</span>
+
+    /**
+     * Creates and returns a deep copy of this playlist.
+     * This method utilizes the copy constructor.
+     *
+     * @return A new Playlist instance that is a copy of this playlist.
+     */
+    @Override
+    public Playlist clone() {
+<span class="fc" id="L103">        return new Playlist(this);</span>
+    }
+
+    /**
+     * Compares this playlist to another object for equality.
+     * &lt;p&gt;
+     * Two playlists are considered equal if they have the same creator, name,
+     * description, number of followers, status, a structurally equal list of songs,
+     * and the same current song.
+     * &lt;/p&gt;
+     *
+     * @param obj The object to compare with.
+     * @return {@code true} if the objects are equal, {@code false} otherwise.
+     */
+    @Override
+    public boolean equals(Object obj) {
+<span class="fc bfc" id="L119" title="All 2 branches covered.">        if (this == obj) {</span>
+<span class="fc" id="L120">            return true;</span>
+        }
+<span class="fc bfc" id="L122" title="All 4 branches covered.">        if (obj == null || getClass() != obj.getClass()) {</span>
+<span class="fc" id="L123">            return false;</span>
+        }
+<span class="fc" id="L125">        Playlist other = (Playlist) obj;</span>
+<span class="pc bpc" id="L126" title="1 of 4 branches missed.">        return Objects.equals(creator, other.creator) &amp;&amp; Objects.equals(playlistName, other.playlistName)</span>
+<span class="pc bpc" id="L127" title="2 of 4 branches missed.">                &amp;&amp; Objects.equals(playlistDescription, other.playlistDescription) &amp;&amp; numberOfFollowers == other.numberOfFollowers</span>
+<span class="pc bpc" id="L128" title="2 of 4 branches missed.">                &amp;&amp; Objects.equals(status, other.status) &amp;&amp; Objects.equals(songs, other.songs) // Assumes Song.equals() is well-defined</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">                &amp;&amp; Objects.equals(currentSong, other.currentSong); // Assumes Song.equals() is well-defined</span>
+    }
+
+    /**
+     * Returns a string representation of the playlist.
+     * This includes the creator, name, description, follower count, status,
+     * list of songs, and the current song.
+     *
+     * @return A string containing all the playlist's attributes.
+     */
+    @Override
+    public String toString() {
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">        return &quot;Playlist{&quot; + &quot;creator: {&quot; + (creator != null ? creator.toString() : &quot;null&quot;) + &quot;} \'&quot; + &quot;, playlistName='&quot; + playlistName + '\''</span>
+                + &quot;, playlistDescription='&quot; + playlistDescription + '\'' + &quot;, numberOfFollowers=&quot; + numberOfFollowers
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">                + &quot;, status='&quot; + status + '\'' + &quot;, songs=&quot; + (songs != null ? songs.toString() : &quot;[]&quot;) + '}'</span>
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">                + &quot;, currentsong: {&quot; + (currentSong != null ? currentSong.toString() : &quot;null&quot;) + &quot;}&quot;;</span>
+    }
+
+    /**
+     * Gets the user who created this playlist.
+     *
+     * @return The creator of the playlist.
+     */
+    public User getCreator() {
+<span class="fc" id="L153">        return creator;</span>
+    }
+
+    /**
+     * Gets the name of the playlist.
+     *
+     * @return The playlist name.
+     */
+    public String getPlaylistName() {
+<span class="fc" id="L162">        return playlistName;</span>
+    }
+
+    /**
+     * Gets the description of the playlist.
+     *
+     * @return The playlist description.
+     */
+    public String getPlaylistDescription() {
+<span class="fc" id="L171">        return playlistDescription;</span>
+    }
+
+    /**
+     * Gets the number of users following this playlist.
+     *
+     * @return The number of followers.
+     */
+    public int getNumberOfFollowers() {
+<span class="fc" id="L180">        return numberOfFollowers;</span>
+    }
+
+    /**
+     * Gets the visibility status of the playlist (e.g., &quot;public&quot; or &quot;private&quot;).
+     *
+     * @return The status string.
+     */
+    public String getStatus() {
+<span class="fc" id="L189">        return status;</span>
+    }
+
+    /**
+     * Gets a defensive copy of the songs in this playlist.
+     * Modifying the returned list will not affect the playlist's internal list of songs.
+     * Each song in the copied list is a clone of the original song.
+     *
+     * @return A new list containing clones of the songs in this playlist.
+     */
+    public List&lt;Song&gt; getSongs() {
+<span class="fc" id="L200">        List&lt;Song&gt; copy = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">        if (this.songs != null) {</span>
+<span class="fc bfc" id="L202" title="All 2 branches covered.">            for (Song song : this.songs) {</span>
+<span class="fc" id="L203">                copy.add(song.clone()); // Assuming Song has a clone method</span>
+<span class="fc" id="L204">            }</span>
+        }
+<span class="fc" id="L206">        return copy;</span>
+    }
+
+    /**
+     * Gets the currently selected song in the playlist.
+     * This returns a direct reference, so modifications to the song object
+     * will affect the song within the playlist. Consider returning a clone
+     * if immutability is desired.
+     *
+     * @return The current song, or {@code null} if no song is currently selected or the playlist is empty.
+     */
+    public Song getCurrentSong() {
+<span class="fc" id="L218">        return currentSong; // Or currentSong.clone() if a copy is preferred</span>
+    }
+
+    /**
+     * Sets the creator of the playlist.
+     *
+     * @param creator The new {@link User} who created the playlist.
+     */
+    public void setCreatorUsername(User creator) {
+<span class="fc" id="L227">        this.creator = creator;</span>
+<span class="fc" id="L228">    }</span>
+
+    /**
+     * Sets the name of the playlist.
+     *
+     * @param playlistName The new playlist name.
+     */
+    public void setPlaylistName(String playlistName) {
+<span class="fc" id="L236">        this.playlistName = playlistName;</span>
+<span class="fc" id="L237">    }</span>
+
+    /**
+     * Sets the description of the playlist.
+     *
+     * @param playlistDescription The new playlist description.
+     */
+    public void setPlaylistDescription(String playlistDescription) {
+<span class="fc" id="L245">        this.playlistDescription = playlistDescription;</span>
+<span class="fc" id="L246">    }</span>
+
+    /**
+     * Sets the number of followers for this playlist.
+     *
+     * @param numberOfFollowers The new number of followers.
+     */
+    public void setNumberOfFollowers(int numberOfFollowers) {
+<span class="fc" id="L254">        this.numberOfFollowers = numberOfFollowers;</span>
+<span class="fc" id="L255">    }</span>
+
+    /**
+     * Sets the visibility status of the playlist.
+     *
+     * @param status The new status (e.g., &quot;public&quot; or &quot;private&quot;).
+     */
+    public void setStatus(String status) {
+<span class="fc" id="L263">        this.status = status;</span>
+<span class="fc" id="L264">    }</span>
+
+    /**
+     * Replaces all songs in this playlist with clones of the songs from the provided list.
+     * The existing songs in the playlist are cleared first.
+     *
+     * @param songs The list of {@link Song} objects to set. Each song will be cloned.
+     */
+    public void setSongs(List&lt;Song&gt; songs) {
+<span class="fc" id="L273">        this.songs.clear();</span>
+<span class="pc bpc" id="L274" title="1 of 2 branches missed.">        if (songs != null) {</span>
+<span class="fc bfc" id="L275" title="All 2 branches covered.">            for (Song song : songs) {</span>
+<span class="fc" id="L276">                this.songs.add(song.clone()); // Assuming Song has a clone method</span>
+<span class="fc" id="L277">            }</span>
+        }
+        // Optionally, update currentSong if the list of songs changes significantly
+<span class="pc bpc" id="L280" title="2 of 4 branches missed.">        if (!this.songs.isEmpty() &amp;&amp; !this.songs.contains(this.currentSong)) {</span>
+<span class="fc" id="L281">            this.currentSong = this.songs.get(0); // Or a random one</span>
+<span class="nc bnc" id="L282" title="All 2 branches missed.">        } else if (this.songs.isEmpty()) {</span>
+<span class="nc" id="L283">            this.currentSong = null;</span>
+        }
+<span class="fc" id="L285">    }</span>
+
+    /**
+     * Sets the currently selected song in the playlist.
+     * The provided song should ideally be one of the songs already in the playlist.
+     *
+     * @param currentSong The new current {@link Song}.
+     */
+    public void setCurrentSong(Song currentSong) {
+        // Consider adding a check to ensure currentSong is part of this.songs
+<span class="fc" id="L295">        this.currentSong = currentSong;</span>
+<span class="fc" id="L296">    }</span>
+
+    /**
+     * Checks if the playlist is private. Comparison is case-insensitive.
+     *
+     * @return {@code true} if the playlist status is &quot;private&quot;, {@code false} otherwise.
+     */
+    public boolean isPrivate() {
+<span class="fc" id="L304">        return &quot;private&quot;.equalsIgnoreCase(status);</span>
+    }
+
+    /**
+     * Checks if the playlist is public. Comparison is case-insensitive.
+     *
+     * @return {@code true} if the playlist status is &quot;public&quot;, {@code false} otherwise.
+     */
+    public boolean isPublic() {
+<span class="fc" id="L313">        return &quot;public&quot;.equalsIgnoreCase(status);</span>
+    }
+
+    /**
+     * Plays the current song in the playlist.
+     * This action increments the play count of the current song,
+     * adds points to the user, and updates the user's listening history.
+     * Does nothing if {@code currentSong} is null.
+     *
+     * @param user The {@link User} who is playing the song.
+     */
+    @Override
+    public void play(User user) {
+<span class="pc bpc" id="L326" title="2 of 4 branches missed.">        if (this.currentSong != null &amp;&amp; user != null) {</span>
+<span class="fc" id="L327">            this.currentSong.incrementTimesPlayed();</span>
+<span class="fc" id="L328">            user.addPoints();</span>
+<span class="fc" id="L329">            user.updateHistory(this.currentSong);</span>
+        }
+<span class="fc" id="L331">    }</span>
+
+    /**
+     * Moves to the next song in the playlist.
+     * &lt;p&gt;
+     * If the user's subscription plan allows browsing the playlist ({@code canBrowsePlaylist()}),
+     * it cycles to the next song in order.
+     * Otherwise, if the playlist has more than one song, it selects a new random song
+     * that is different from the current one. If the playlist has only one song,
+     * the current song remains unchanged.
+     * &lt;/p&gt;
+     * Does nothing if the playlist is empty or currentSong is null.
+     *
+     * @param user The {@link User} performing the action. Their subscription plan determines behavior.
+     */
+    @Override
+    public void next(User user) {
+<span class="pc bpc" id="L348" title="4 of 8 branches missed.">        if (songs == null || songs.isEmpty() || user == null || user.getSubscriptionPlan() == null) {</span>
+<span class="nc" id="L349">            return;</span>
+        }
+
+<span class="fc bfc" id="L352" title="All 2 branches covered.">        if (user.getSubscriptionPlan().canBrowsePlaylist()) {</span>
+<span class="fc" id="L353">            int index = songs.indexOf(currentSong);</span>
+<span class="pc bpc" id="L354" title="1 of 2 branches missed.">            if (index != -1) { // currentSong is in the list</span>
+<span class="fc" id="L355">                int nextIndex = (index + 1) % songs.size();</span>
+<span class="fc" id="L356">                currentSong = songs.get(nextIndex);</span>
+<span class="pc bnc" id="L357" title="All 2 branches missed.">            } else if (!songs.isEmpty()) { // currentSong was not in list, pick first</span>
+<span class="nc" id="L358">                 currentSong = songs.get(0);</span>
+            }
+<span class="fc" id="L360">        } else {</span>
+<span class="pc bpc" id="L361" title="1 of 2 branches missed.">            if (songs.size() &lt;= 1) { // Only one song or empty, no change or handled by initial check</span>
+<span class="nc" id="L362">                return;</span>
+            }
+<span class="fc" id="L364">            Random rand = new Random();</span>
+<span class="fc" id="L365">            int currentIndex = songs.indexOf(currentSong);</span>
+            int randomIndex;
+            do {
+<span class="fc" id="L368">                randomIndex = rand.nextInt(songs.size());</span>
+<span class="pc bpc" id="L369" title="3 of 4 branches missed.">            } while (randomIndex == currentIndex &amp;&amp; songs.size() &gt; 1); // ensure different if possible</span>
+<span class="fc" id="L370">            currentSong = songs.get(randomIndex);</span>
+        }
+<span class="fc" id="L372">    }</span>
+
+    /**
+     * Selects a new random song from the playlist, ensuring it's different from the current song
+     * if the playlist contains more than one song.
+     * If the playlist has only one song, the current song remains unchanged.
+     * Does nothing if the playlist is empty.
+     */
+    public void nextShuffle() {
+<span class="pc bpc" id="L381" title="2 of 4 branches missed.">        if (songs == null || songs.isEmpty()) {</span>
+<span class="nc" id="L382">            return;</span>
+        }
+<span class="fc bfc" id="L384" title="All 2 branches covered.">        if (songs.size() == 1) {</span>
+<span class="fc" id="L385">            currentSong = songs.get(0); // Ensure current song is set if it was null</span>
+<span class="fc" id="L386">            return;</span>
+        }
+<span class="fc" id="L388">        Random rand = new Random();</span>
+<span class="fc" id="L389">        int currentIndex = songs.indexOf(currentSong);</span>
+        int randomIndex;
+        do {
+<span class="fc" id="L392">            randomIndex = rand.nextInt(songs.size());</span>
+<span class="pc bpc" id="L393" title="3 of 4 branches missed.">        } while (randomIndex == currentIndex &amp;&amp; songs.size() &gt; 1); // ensure different if possible</span>
+<span class="fc" id="L394">        currentSong = songs.get(randomIndex);</span>
+<span class="fc" id="L395">    }</span>
+
+    /**
+     * Moves to the previous song in the playlist.
+     * &lt;p&gt;
+     * This action is only allowed if the user's subscription plan permits playlist browsing
+     * ({@code canBrowsePlaylist()}). If permitted, it cycles to the previous song in order.
+     * &lt;/p&gt;
+     * Does nothing if the playlist is empty or currentSong is null.
+     *
+     * @param user The {@link User} performing the action.
+     * @throws SubscriptionDoesNotAllowException If the user's subscription plan does not
+     *         allow navigating to the previous song.
+     */
+    @Override
+    public void previous(User user) throws SubscriptionDoesNotAllowException {
+<span class="pc bpc" id="L411" title="4 of 8 branches missed.">        if (songs == null || songs.isEmpty() || user == null || user.getSubscriptionPlan() == null) {</span>
+<span class="nc" id="L412">            return;</span>
+        }
+
+<span class="fc bfc" id="L415" title="All 2 branches covered.">        if (user.getSubscriptionPlan().canBrowsePlaylist()) {</span>
+<span class="fc" id="L416">            int index = songs.indexOf(currentSong);</span>
+<span class="pc bpc" id="L417" title="1 of 2 branches missed.">            if (index != -1) { // currentSong is in the list</span>
+<span class="fc" id="L418">                int prevIndex = (index - 1 + songs.size()) % songs.size();</span>
+<span class="fc" id="L419">                currentSong = songs.get(prevIndex);</span>
+<span class="pc bnc" id="L420" title="All 2 branches missed.">            } else if (!songs.isEmpty()) { // currentSong was not in list, pick last</span>
+<span class="nc" id="L421">                 currentSong = songs.get(songs.size() - 1);</span>
+            }
+<span class="fc" id="L423">        } else {</span>
+<span class="fc" id="L424">            throw new SubscriptionDoesNotAllowException(&quot;Your subscription does not allow going back in the playlist.&quot;);</span>
+        }
+<span class="fc" id="L426">    }</span>
+
+    /**
+     * Adds a song to the playlist.
+     * &lt;p&gt;
+     * This action is only allowed if the playlist creator's subscription plan permits
+     * playlist creation/modification ({@code canCreatePlaylist()}).
+     * A cloned version of the song is added.
+     * &lt;/p&gt;
+     *
+     * @param song The {@link Song} to add. The song will be cloned before adding.
+     * @throws SubscriptionDoesNotAllowException If the creator's subscription plan does not
+     *         allow adding songs to the playlist.
+     * @throws UnsupportedOperationException If the song (or an equal song) is already in the playlist.
+     * @throws NullPointerException if the song to add is null.
+     */
+    public void addSong(Song song) throws SubscriptionDoesNotAllowException {
+<span class="fc" id="L443">        Objects.requireNonNull(song, &quot;Cannot add a null song to the playlist.&quot;);</span>
+<span class="pc bpc" id="L444" title="2 of 4 branches missed.">        if (creator == null || creator.getSubscriptionPlan() == null) {</span>
+<span class="nc" id="L445">             throw new IllegalStateException(&quot;Playlist creator or subscription plan is not properly initialized.&quot;);</span>
+        }
+
+<span class="fc bfc" id="L448" title="All 2 branches covered.">        if (creator.getSubscriptionPlan().canCreatePlaylist()) {</span>
+<span class="fc bfc" id="L449" title="All 2 branches covered.">            if (!songs.contains(song)) { // Relies on Song.equals()</span>
+<span class="fc" id="L450">                songs.add(song.clone()); // Assuming Song has a clone method</span>
+<span class="pc bpc" id="L451" title="3 of 4 branches missed.">                if (currentSong == null &amp;&amp; songs.size() == 1) { // If playlist was empty, set current song</span>
+<span class="nc" id="L452">                    currentSong = songs.get(0);</span>
+                }
+            } else {
+<span class="fc" id="L455">                throw new UnsupportedOperationException(&quot;This song is already in the playlist.&quot;);</span>
+            }
+        } else {
+<span class="fc" id="L458">            throw new SubscriptionDoesNotAllowException(&quot;Your subscription does not allow adding songs to the playlist.&quot;);</span>
+        }
+<span class="fc" id="L460">    }</span>
+
+    /**
+     * Deletes a song from the playlist.
+     * &lt;p&gt;
+     * This action is only allowed if the playlist creator's subscription plan permits
+     * playlist creation/modification ({@code canCreatePlaylist()}).
+     * If the deleted song was the current song, {@code currentSong} might become null
+     * or be set to another song if the playlist is not empty.
+     * &lt;/p&gt;
+     *
+     * @param song The {@link Song} to delete. Equality is checked using {@code Song.equals()}.
+     * @throws SubscriptionDoesNotAllowException If the creator's subscription plan does not
+     *         allow deleting songs from the playlist.
+     * @throws UnsupportedOperationException If the specified song is not found in the playlist.
+     * @throws NullPointerException if the song to delete is null.
+     */
+    public void deleteSong(Song song) throws SubscriptionDoesNotAllowException {
+<span class="fc" id="L478">        Objects.requireNonNull(song, &quot;Cannot delete a null song from the playlist.&quot;);</span>
+<span class="pc bpc" id="L479" title="2 of 4 branches missed.">        if (creator == null || creator.getSubscriptionPlan() == null) {</span>
+<span class="nc" id="L480">             throw new IllegalStateException(&quot;Playlist creator or subscription plan is not properly initialized.&quot;);</span>
+        }
+
+<span class="fc bfc" id="L483" title="All 2 branches covered.">        if (creator.getSubscriptionPlan().canCreatePlaylist()) {</span>
+<span class="fc" id="L484">            boolean removed = songs.remove(song); // Relies on Song.equals()</span>
+<span class="fc bfc" id="L485" title="All 2 branches covered.">            if (removed) {</span>
+<span class="pc bpc" id="L486" title="1 of 2 branches missed.">                if (Objects.equals(currentSong, song)) {</span>
+<span class="nc bnc" id="L487" title="All 2 branches missed.">                    currentSong = songs.isEmpty() ? null : songs.get(0); // Or a random one</span>
+                }
+            } else {
+<span class="fc" id="L490">                throw new UnsupportedOperationException(&quot;This song is not in the playlist.&quot;);</span>
+            }
+<span class="fc" id="L492">        } else {</span>
+<span class="fc" id="L493">            throw new SubscriptionDoesNotAllowException(&quot;Your subscription does not allow deleting songs from the playlist.&quot;);</span>
+        }
+<span class="fc" id="L495">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

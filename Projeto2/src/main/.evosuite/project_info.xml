@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Project>
+    <totalNumberOfTestableClasses>1</totalNumberOfTestableClasses>
+    <cut>
+        <fullNameOfTargetClass>org.spotifumtp37.model.album.Song</fullNameOfTargetClass>
+        <fullNameOfTestSuite>org.spotifumtp37.model.album.Song_ESTest</fullNameOfTestSuite>
+        <generation>
+            <id>0</id>
+            <failed>true</failed>
+            <modified>true</modified>
+            <timeBudgetInSeconds>60</timeBudgetInSeconds>
+            <memoryInMB>2000</memoryInMB>
+            <std_err_CLIENT>/home/joao/Desktop/ATS/projeto/Projeto2/src/main/.evosuite/tmp_2026_04_19_16_25_30/logs/org.spotifumtp37.model.album.Song/std_err_CLIENT.log</std_err_CLIENT>
+            <std_out_CLIENT>/home/joao/Desktop/ATS/projeto/Projeto2/src/main/.evosuite/tmp_2026_04_19_16_25_30/logs/org.spotifumtp37.model.album.Song/std_out_CLIENT.log</std_out_CLIENT>
+            <std_err_MASTER>/home/joao/Desktop/ATS/projeto/Projeto2/src/main/.evosuite/tmp_2026_04_19_16_25_30/logs/org.spotifumtp37.model.album.Song/std_err_MASTER.log</std_err_MASTER>
+            <std_out_MASTER>/home/joao/Desktop/ATS/projeto/Projeto2/src/main/.evosuite/tmp_2026_04_19_16_25_30/logs/org.spotifumtp37.model.album.Song/std_out_MASTER.log</std_out_MASTER>
+        </generation>
+    </cut>
+</Project>

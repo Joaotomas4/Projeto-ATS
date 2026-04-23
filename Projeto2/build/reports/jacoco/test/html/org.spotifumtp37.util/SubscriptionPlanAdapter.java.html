@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SubscriptionPlanAdapter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">GrupoTP-37</a> &gt; <a href="index.source.html" class="el_package">org.spotifumtp37.util</a> &gt; <span class="el_source">SubscriptionPlanAdapter.java</span></div><h1>SubscriptionPlanAdapter.java</h1><pre class="source lang-java linenums">// SubscriptionPlanAdapter.java
+package org.spotifumtp37.util;
+
+import com.google.gson.*;
+import org.spotifumtp37.model.subscription.*;
+
+import java.lang.reflect.Type;
+
+/**
+ * Handles both writing and reading SubscriptionPlan subtypes
+ */
+<span class="nc" id="L12">public class SubscriptionPlanAdapter</span>
+        implements JsonSerializer&lt;SubscriptionPlan&gt;, JsonDeserializer&lt;SubscriptionPlan&gt; {
+
+    @Override
+    public JsonElement serialize(SubscriptionPlan src, Type typeOfSrc, JsonSerializationContext ctx) {
+<span class="nc" id="L17">        JsonObject obj = (JsonObject) ctx.serialize(src, src.getClass());</span>
+        // add a &quot;type&quot; property so we can round‑trip it
+<span class="nc" id="L19">        obj.addProperty(&quot;type&quot;, src.getClass().getSimpleName());</span>
+<span class="nc" id="L20">        return obj;</span>
+    }
+
+    public SubscriptionPlan deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext ctx)
+            throws JsonParseException {
+<span class="nc" id="L25">        JsonObject obj = json.getAsJsonObject();</span>
+<span class="nc bnc" id="L26" title="All 2 branches missed.">        String kind = obj.has(&quot;type&quot;) ? obj.get(&quot;type&quot;).getAsString() : &quot;FreePlan&quot;;</span>
+
+<span class="nc bnc" id="L28" title="All 3 branches missed.">        switch (kind) {</span>
+            case &quot;PremiumBase&quot;:
+<span class="nc" id="L30">                return ctx.deserialize(obj, PremiumBase.class);</span>
+            case &quot;PremiumTop&quot;:
+<span class="nc" id="L32">                return ctx.deserialize(obj, PremiumTop.class);</span>
+            default:
+<span class="nc" id="L34">                return ctx.deserialize(obj, FreePlan.class);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

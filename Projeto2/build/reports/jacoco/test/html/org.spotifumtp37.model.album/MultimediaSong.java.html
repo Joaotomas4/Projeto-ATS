@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MultimediaSong.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">GrupoTP-37</a> &gt; <a href="index.source.html" class="el_package">org.spotifumtp37.model.album</a> &gt; <span class="el_source">MultimediaSong.java</span></div><h1>MultimediaSong.java</h1><pre class="source lang-java linenums">package org.spotifumtp37.model.album;
+
+import java.io.Serializable;
+
+/**
+ * Represents a song with associated multimedia content in a music application.
+ * &lt;p&gt;
+ * This class extends the base {@link Song} class and adds functionality to
+ * store and manage video links.
+ * &lt;/p&gt;
+ */
+public class MultimediaSong extends Song implements Serializable {
+    private final boolean multimedia;
+    private String videoLink;
+
+    /**
+     * Copy constructor that creates a new MultimediaSong as a copy of another MultimediaSong.
+     *
+     * @param other The MultimediaSong to copy
+     */
+    public MultimediaSong(MultimediaSong other) {
+<span class="fc" id="L22">        super(other);</span>
+<span class="fc" id="L23">        this.multimedia = true;</span>
+<span class="fc" id="L24">        this.videoLink = other.videoLink;</span>
+<span class="fc" id="L25">    }</span>
+
+    /**
+     * Gets the video link associated with this multimedia song.
+     *
+     * @return The URL or reference to the video content
+     */
+    public String getVideoLink() {
+<span class="fc" id="L33">        return videoLink;</span>
+    }
+
+    /**
+     * Sets the video link associated with this multimedia song.
+     *
+     * @param videoLink The URL or reference to the video content
+     */
+    public void setVideoLink(String videoLink) {
+<span class="nc" id="L42">        this.videoLink = videoLink;</span>
+<span class="nc" id="L43">    }</span>
+
+    /**
+     * Parameterized constructor to create a multimedia song with specific attributes.
+     *
+     * @param name The name of the song
+     * @param artist The artist who performs the song
+     * @param publisher The publisher of the song
+     * @param lyrics The lyrics of the song
+     * @param musicalNotes The musical notes or composition information
+     * @param genre The genre of the song
+     * @param durationInSeconds The duration of the song in seconds
+     * @param videoLink The URL or reference to the video content
+     */
+    MultimediaSong(String name, String artist, String publisher, String lyrics, String musicalNotes, String genre, int durationInSeconds, String videoLink) {
+<span class="fc" id="L58">        super(name, artist, publisher, lyrics, musicalNotes, genre, durationInSeconds);</span>
+<span class="fc" id="L59">        this.multimedia = true;</span>
+<span class="fc" id="L60">        this.videoLink = videoLink;</span>
+<span class="fc" id="L61">    }</span>
+
+    /**
+     * Checks if the song has multimedia content.
+     *
+     * @return {@code true} as this is a multimedia song
+     */
+    public boolean isMultimedia() {
+<span class="fc" id="L69">        return multimedia;</span>
+    }
+
+    /**
+     * Creates and returns a deep copy of this multimedia song.
+     *
+     * @return A new MultimediaSong instance that is a copy of this song
+     */
+    @Override
+    public MultimediaSong clone() {
+<span class="fc" id="L79">        return new MultimediaSong(this);</span>
+    }
+
+    /**
+     * Returns a string representation of the multimedia song.
+     *
+     * @return A string containing the base song's string representation plus
+     *         the multimedia flag and video link
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L90">        return super.toString() +</span>
+                &quot;multimedia=&quot; + multimedia +
+                &quot;, videoLink='&quot; + videoLink + '\'' +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

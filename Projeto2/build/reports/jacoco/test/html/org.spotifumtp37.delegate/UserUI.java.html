@@ -1,0 +1,631 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserUI.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">GrupoTP-37</a> &gt; <a href="index.source.html" class="el_package">org.spotifumtp37.delegate</a> &gt; <span class="el_source">UserUI.java</span></div><h1>UserUI.java</h1><pre class="source lang-java linenums">package org.spotifumtp37.delegate;
+
+import org.spotifumtp37.model.SpotifUMData;
+import org.spotifumtp37.model.album.Album;
+import org.spotifumtp37.model.album.Song;
+import org.spotifumtp37.exceptions.AlreadyExistsException;
+import org.spotifumtp37.exceptions.DoesntExistException;
+import org.spotifumtp37.exceptions.SubscriptionDoesNotAllowException;
+import org.spotifumtp37.model.playlist.Playlist;
+import org.spotifumtp37.model.subscription.FreePlan;
+import org.spotifumtp37.model.subscription.PremiumBase;
+import org.spotifumtp37.model.subscription.PremiumTop;
+import org.spotifumtp37.model.user.User;
+
+import java.io.IOException;
+import java.util.*;
+
+public class UserUI {
+    private final Scanner scanner;
+    private User loggedUser;
+    private final SpotifUMData modelData;
+    private final PlayerUI playerUI; // Added PlayerUI instance
+
+    public void setLoggedUser(User loggedUser) {
+<span class="nc" id="L25">        this.loggedUser = loggedUser;</span>
+<span class="nc" id="L26">    }</span>
+
+<span class="nc" id="L28">    UserUI(SpotifUMData modelData, User loggedUser, Scanner scanner) {</span>
+<span class="nc" id="L29">        this.loggedUser = loggedUser;</span>
+<span class="nc" id="L30">        this.modelData = modelData;</span>
+<span class="nc" id="L31">        this.scanner = scanner;</span>
+<span class="nc" id="L32">        this.playerUI = new PlayerUI(scanner); // Initialize PlayerUI</span>
+<span class="nc" id="L33">    }</span>
+
+    public void showUserMenu() {
+<span class="nc" id="L36">        NewMenu userMenu = new NewMenu(new String[]{</span>
+                &quot;Listen to Music&quot;,
+                &quot;Manage Playlists&quot;,
+                &quot;Update Subscription&quot;,
+                &quot;Edit Profile&quot;
+        });
+
+<span class="nc" id="L43">        userMenu.setHandler(1, this::showMusicSelectionMenu);</span>
+<span class="nc" id="L44">        userMenu.setHandler(2, this::showUserPlaylistManagementMenu);</span>
+<span class="nc" id="L45">        userMenu.setHandler(3, this::showChangeSubscriptionMenu);</span>
+<span class="nc" id="L46">        userMenu.setHandler(4, this::showUserEditMenu);</span>
+
+<span class="nc" id="L48">        userMenu.run();</span>
+<span class="nc" id="L49">    }</span>
+
+    //submenus do user
+
+    public void showMusicSelectionMenu() {
+<span class="nc" id="L54">        NewMenu musicSelectionMenu = new NewMenu(new String[]{</span>
+                &quot;Play from playlist&quot;,
+                &quot;Play from album&quot;,
+                &quot;Play free playlist&quot;
+        });
+
+<span class="nc" id="L60">        musicSelectionMenu.setPreCondition(1, () -&gt; this.loggedUser.getSubscriptionPlan().canBrowsePlaylist());</span>
+<span class="nc" id="L61">        musicSelectionMenu.setPreCondition(2, () -&gt; this.loggedUser.getSubscriptionPlan().canBrowsePlaylist());</span>
+
+<span class="nc" id="L63">        musicSelectionMenu.setHandler(1, this::showPlayFromPlaylistSelectionMenu);</span>
+<span class="nc" id="L64">        musicSelectionMenu.setHandler(2, this::showPlayFromAlbumSelectionMenu);</span>
+<span class="nc" id="L65">        musicSelectionMenu.setHandler(3, this::playFreePlaylist); // To be implemented later</span>
+
+<span class="nc" id="L67">        musicSelectionMenu.run();</span>
+<span class="nc" id="L68">    }</span>
+
+    public void showPlayFromPlaylistSelectionMenu() {
+<span class="nc" id="L71">        NewMenu playFromPlaylistMenu = new NewMenu(new String[]{</span>
+                &quot;View All Playlists&quot;,
+                &quot;Play from a Specific Playlist&quot;
+        });
+
+<span class="nc" id="L76">        playFromPlaylistMenu.setHandler(1, this::viewAllPlaylistsForPlaying);</span>
+<span class="nc" id="L77">        playFromPlaylistMenu.setHandler(2, this::playFromSpecificPlaylist);</span>
+
+<span class="nc" id="L79">        playFromPlaylistMenu.run();</span>
+<span class="nc" id="L80">    }</span>
+
+    public void showPlayFromAlbumSelectionMenu() {
+<span class="nc" id="L83">        NewMenu playFromAlbumMenu = new NewMenu(new String[]{</span>
+                &quot;View All Albums&quot;,
+                &quot;Play from a Specific Album&quot;
+        });
+
+<span class="nc" id="L88">        playFromAlbumMenu.setHandler(1, this::viewAllAlbumsForPlaying);</span>
+<span class="nc" id="L89">        playFromAlbumMenu.setHandler(2, this::playFromSpecificAlbum);</span>
+
+<span class="nc" id="L91">        playFromAlbumMenu.run();</span>
+<span class="nc" id="L92">    }</span>
+
+    private void viewAllPlaylistsForPlaying() {
+<span class="nc" id="L95">        System.out.println(&quot;Available Playlists:&quot;);</span>
+<span class="nc" id="L96">        this.modelData.getMapPlaylists().forEach((name, playlist) -&gt; {</span>
+<span class="nc bnc" id="L97" title="All 4 branches missed.">            if (playlist.isPublic() || playlist.getCreator().equals(loggedUser)) {</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">                System.out.println(&quot;- &quot; + name + (playlist.isPublic() ? &quot; (Public)&quot; : &quot; (Private)&quot;));</span>
+            }
+<span class="nc" id="L100">        });</span>
+<span class="nc" id="L101">        System.out.println(&quot;--- End of Playlist List ---&quot;);</span>
+<span class="nc" id="L102">    }</span>
+
+    private void playFromSpecificPlaylist() {
+<span class="nc" id="L105">        System.out.println(&quot;Enter the name of the playlist to play: &quot;);</span>
+<span class="nc" id="L106">        String playlistName = scanner.nextLine().trim();</span>
+        try {
+<span class="nc" id="L108">            Playlist playlist = modelData.getAnyPlaylist(playlistName, loggedUser);</span>
+<span class="nc" id="L109">            System.out.println(&quot;Playing playlist: &quot; + playlist.getPlaylistName());</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">            if (playlist.getSongs().isEmpty()) {</span>
+<span class="nc" id="L111">                System.out.println(&quot;This playlist is empty.&quot;);</span>
+            } else {
+                // Use the new play method with playback controls
+                try {
+<span class="nc" id="L115">                    playerUI.playSong(playlist, loggedUser);</span>
+<span class="nc" id="L116">                } catch (IOException e) {</span>
+<span class="nc" id="L117">                    System.out.println(&quot;Error playing playlist. Please try again later.&quot; + e.getMessage());</span>
+<span class="nc" id="L118">                }</span>
+            }
+<span class="nc" id="L120">        } catch (DoesntExistException e) {</span>
+<span class="nc" id="L121">            System.out.println(&quot;Playlist not found or not accessible.&quot; + e.getMessage());</span>
+<span class="nc" id="L122">        }</span>
+<span class="nc" id="L123">    }</span>
+
+    private void viewAllAlbumsForPlaying() {
+<span class="nc" id="L126">        System.out.println(&quot;Available Albums:&quot;);</span>
+<span class="nc" id="L127">        this.modelData.getMapAlbumsCopy().forEach((title, album) -&gt; System.out.println(&quot;- &quot; + title + &quot; by &quot; + album.getArtist()));</span>
+<span class="nc" id="L128">        System.out.println(&quot;--- End of Album List ---&quot;);</span>
+<span class="nc" id="L129">    }</span>
+
+    private void playFromSpecificAlbum() {
+<span class="nc" id="L132">        scanner.nextLine();</span>
+<span class="nc" id="L133">        System.out.println(&quot;Enter the name of the album to play: &quot;);</span>
+<span class="nc" id="L134">        String albumName = scanner.nextLine().trim();</span>
+        try {
+<span class="nc" id="L136">            Album album = modelData.getAlbum(albumName);</span>
+<span class="nc" id="L137">            System.out.println(&quot;Playing album: &quot; + album.getTitle());</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">            if (album.getSongsCopy().isEmpty()) {</span>
+<span class="nc" id="L139">                System.out.println(&quot;This album has no songs.&quot;);</span>
+            } else {
+                // Use the new play method with playback controls
+                try {
+<span class="nc" id="L143">                    playerUI.playSong(album, loggedUser);</span>
+<span class="nc" id="L144">                } catch (IOException e) {</span>
+<span class="nc" id="L145">                    System.out.println(&quot;Error playing playlist. Please try again later.&quot; + e.getMessage());</span>
+<span class="nc" id="L146">                }</span>
+            }
+<span class="nc" id="L148">        } catch (DoesntExistException e) {</span>
+<span class="nc" id="L149">            System.out.println(&quot;Album not found.&quot;);</span>
+<span class="nc" id="L150">        }</span>
+<span class="nc" id="L151">    }</span>
+
+    private void playFreePlaylist() {
+<span class="nc" id="L154">        List&lt;Song&gt; allAvailableSongs = new ArrayList&lt;&gt;();</span>
+        // Aggregate ALL songs from all albums
+<span class="nc bnc" id="L156" title="All 2 branches missed.">        for (Album album : modelData.getMapAlbums().values()) {</span>
+<span class="nc" id="L157">            allAvailableSongs.addAll(album.getSongs());</span>
+<span class="nc" id="L158">        }</span>
+
+<span class="nc bnc" id="L160" title="All 2 branches missed.">        if (allAvailableSongs.isEmpty()) {</span>
+<span class="nc" id="L161">            System.out.println(&quot;No songs available to play.&quot;);</span>
+<span class="nc" id="L162">            return;</span>
+        }
+        // Shuffle the songs
+<span class="nc" id="L165">        Collections.shuffle(allAvailableSongs);</span>
+
+        // Create a temporary Playlist object
+<span class="nc" id="L168">        Playlist tempPlaylist = new Playlist(this.loggedUser, &quot;FreeShuffle&quot;, &quot;&quot;, 0 , &quot;&quot;, allAvailableSongs);</span>
+
+        // Play with PlayerUI (using your existing playSong(Playlist, User) method)
+        try {
+<span class="nc" id="L172">            playerUI.playSong(tempPlaylist, loggedUser);</span>
+<span class="nc" id="L173">        } catch (IOException e) {</span>
+<span class="nc" id="L174">            System.out.println(&quot;Error playing songs: &quot; + e.getMessage());</span>
+<span class="nc" id="L175">        }</span>
+<span class="nc" id="L176">    }</span>
+
+    public void showUserPlaylistManagementMenu() {
+<span class="nc" id="L179">        NewMenu userPlaylistMenu = new NewMenu(new String[]{</span>
+                &quot;Create User Playlist&quot;,
+                &quot;Add song to playlist&quot;,
+                &quot;Create Recommended Playlist&quot;,
+                &quot;View My Playlists&quot;,
+                &quot;Delete Playlist&quot;
+        });
+
+<span class="nc" id="L187">        userPlaylistMenu.setPreCondition(1, () -&gt; this.loggedUser.getSubscriptionPlan().canCreatePlaylist());</span>
+<span class="nc" id="L188">        userPlaylistMenu.setPreCondition(2, () -&gt; this.loggedUser.getSubscriptionPlan().canCreatePlaylist());</span>
+<span class="nc" id="L189">        userPlaylistMenu.setPreCondition(3, () -&gt; this.loggedUser.getSubscriptionPlan().canAccessFavouritesList());</span>
+<span class="nc" id="L190">        userPlaylistMenu.setPreCondition(5, () -&gt; this.loggedUser.getSubscriptionPlan().canCreatePlaylist());</span>
+
+<span class="nc" id="L192">        userPlaylistMenu.setHandler(1, this::createPlaylist);</span>
+<span class="nc" id="L193">        userPlaylistMenu.setHandler(2, this::addSongToPlaylist);</span>
+<span class="nc" id="L194">        userPlaylistMenu.setHandler(3, this::showRecommendedPlaylistMenu);</span>
+<span class="nc" id="L195">        userPlaylistMenu.setHandler(4, this::viewUserPlaylists);</span>
+<span class="nc" id="L196">        userPlaylistMenu.setHandler(5, this::deletePlaylist);</span>
+
+<span class="nc" id="L198">        userPlaylistMenu.run();</span>
+<span class="nc" id="L199">    }</span>
+
+    public void showRecommendedPlaylistMenu() {
+<span class="nc" id="L202">        NewMenu recommendedMenu = new NewMenu(new String[]{</span>
+                &quot;Create Top Genre Playlist&quot;,
+                &quot;Create Top Genre Playlist With Max Time&quot;,
+                &quot;Create Top Genre Playlist With Only Explicit Songs&quot;
+        });
+
+        // Set up handlers for recommended playlist options
+<span class="nc" id="L209">        recommendedMenu.setHandler(1, this::createTopGenrePlaylist);</span>
+<span class="nc" id="L210">        recommendedMenu.setHandler(2, this::createTopGenrePlaylistWithMaxTime);</span>
+<span class="nc" id="L211">        recommendedMenu.setHandler(3, this::createTopGenrePlaylistWithExplicitOnly);</span>
+
+<span class="nc" id="L213">        recommendedMenu.run();</span>
+<span class="nc" id="L214">    }</span>
+
+    private void createTopGenrePlaylist() {
+<span class="nc" id="L217">        System.out.println(&quot;Creating a top genre playlist...&quot;);</span>
+<span class="nc" id="L218">        Map&lt;String, Album&gt; albumMap = modelData.getMapAlbums();</span>
+
+<span class="nc" id="L220">        List&lt;Song&gt; songs = loggedUser.createTopGenrePlaylist(albumMap);</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">        if (songs.isEmpty()) {</span>
+<span class="nc" id="L222">            System.out.println(&quot;Could not create a playlist: No top genre found or no songs for your top genre.&quot;);</span>
+<span class="nc" id="L223">            return;</span>
+        }
+
+<span class="nc" id="L226">        System.out.print(&quot;Enter name for the new playlist: &quot;);</span>
+<span class="nc" id="L227">        String playlistName = scanner.nextLine();</span>
+
+<span class="nc" id="L229">        String playlistDescription = &quot;Top genre playlist created automatically for &quot; + this.loggedUser.getName() + &quot;.&quot;;</span>
+<span class="nc" id="L230">        String status = &quot;private&quot;;</span>
+<span class="nc" id="L231">        Playlist playlist = new Playlist(this.loggedUser,playlistName,playlistDescription,0, status,  songs);</span>
+<span class="nc" id="L232">        try {modelData.addPlaylist(playlist);</span>
+<span class="nc" id="L233">        } catch (AlreadyExistsException e) {</span>
+<span class="nc" id="L234">            System.out.println(&quot;Error: A playlist with that name already exists.&quot; + e.getMessage());</span>
+<span class="nc" id="L235">            return;</span>
+<span class="nc" id="L236">        }</span>
+<span class="nc" id="L237">        System.out.println(&quot;Playlist '&quot; + playlistName + &quot;' created with &quot; + songs.size() + &quot; songs.&quot;);</span>
+<span class="nc" id="L238">    }</span>
+
+    private void createTopGenrePlaylistWithMaxTime() {
+<span class="nc" id="L241">        System.out.println(&quot;Creating a top genre playlist with a maximum total duration...&quot;);</span>
+<span class="nc" id="L242">        Map&lt;String, Album&gt; albumMap = modelData.getMapAlbums();</span>
+
+<span class="nc" id="L244">        System.out.print(&quot;Enter the maximum total duration (in minutes) for the playlist: &quot;);</span>
+        int maxTime;
+        try {
+<span class="nc" id="L247">            maxTime = Integer.parseInt(scanner.nextLine());</span>
+<span class="nc" id="L248">            maxTime *= 60;//convert to seconds</span>
+<span class="nc" id="L249">        } catch (NumberFormatException ex) {</span>
+<span class="nc" id="L250">            System.out.println(&quot;Invalid number input.&quot;);</span>
+<span class="nc" id="L251">            return;</span>
+<span class="nc" id="L252">        }</span>
+
+<span class="nc" id="L254">        List&lt;Song&gt; songs = loggedUser.createTopGenrePlaylistWithinTime(albumMap, maxTime);</span>
+<span class="nc bnc" id="L255" title="All 2 branches missed.">        if (songs.isEmpty()) {</span>
+<span class="nc" id="L256">            System.out.println(&quot;Could not create a playlist: No top genre found or no songs for your top genre.&quot;);</span>
+<span class="nc" id="L257">            return;</span>
+        }
+
+<span class="nc" id="L260">        System.out.print(&quot;Enter name for the new playlist: &quot;);</span>
+<span class="nc" id="L261">        String playlistName = scanner.nextLine();</span>
+
+<span class="nc" id="L263">        String playlistDescription = &quot;Top genre playlist created automatically for &quot; + this.loggedUser.getName() + &quot;.&quot;;</span>
+<span class="nc" id="L264">        String status = &quot;private&quot;;</span>
+
+<span class="nc" id="L266">        Playlist playlist = new Playlist(this.loggedUser,playlistName,playlistDescription,0, status,  songs);</span>
+<span class="nc" id="L267">        try {modelData.addPlaylist(playlist);</span>
+<span class="nc" id="L268">        } catch (AlreadyExistsException e) {</span>
+<span class="nc" id="L269">            System.out.println(&quot;Error: A playlist with that name already exists.&quot; + e.getMessage());</span>
+<span class="nc" id="L270">            return;</span>
+<span class="nc" id="L271">        }</span>
+<span class="nc" id="L272">        System.out.println(&quot;Playlist '&quot; + playlistName + &quot;' created with &quot; + songs.size() + &quot; songs.&quot;);</span>
+<span class="nc" id="L273">    }</span>
+
+    private void createTopGenrePlaylistWithExplicitOnly() {
+<span class="nc" id="L276">        System.out.println(&quot;Creating a top genre playlist with only explicit songs...&quot;);</span>
+<span class="nc" id="L277">        Map&lt;String, Album&gt; albumMap = modelData.getMapAlbums();</span>
+
+<span class="nc" id="L279">        List&lt;Song&gt; songs = loggedUser.createTopGenreExplicitPlaylist(albumMap);</span>
+<span class="nc bnc" id="L280" title="All 2 branches missed.">        if (songs.isEmpty()) {</span>
+<span class="nc" id="L281">            System.out.println(&quot;Could not create a playlist: No top genre found or no songs for your top genre.&quot;);</span>
+<span class="nc" id="L282">            return;</span>
+        }
+
+<span class="nc" id="L285">        System.out.print(&quot;Enter name for the new playlist: &quot;);</span>
+<span class="nc" id="L286">        String playlistName = scanner.nextLine();</span>
+
+<span class="nc" id="L288">        String playlistDescription = &quot;Top genre playlist created automatically for &quot; + this.loggedUser.getName() + &quot;.&quot;;</span>
+<span class="nc" id="L289">        String status = &quot;private&quot;;</span>
+<span class="nc" id="L290">        Playlist playlist = new Playlist(this.loggedUser,playlistName,playlistDescription,0, status,  songs);</span>
+<span class="nc" id="L291">        try {modelData.addPlaylist(playlist);</span>
+<span class="nc" id="L292">        } catch (AlreadyExistsException e) {</span>
+<span class="nc" id="L293">            System.out.println(&quot;Error: A playlist with that name already exists.&quot; + e.getMessage());</span>
+<span class="nc" id="L294">            return;</span>
+<span class="nc" id="L295">        }</span>
+<span class="nc" id="L296">        System.out.println(&quot;Playlist '&quot; + playlistName + &quot;' created with &quot; + songs.size() + &quot; songs.&quot;);</span>
+<span class="nc" id="L297">    }</span>
+
+    private void showChangeSubscriptionMenu() {
+<span class="nc" id="L300">        NewMenu changeSubscriptionMenu = new NewMenu(new String[]{</span>
+                &quot;FreePlan&quot;,
+                &quot;PremiumBase&quot;,
+                &quot;PremiumTop&quot;
+        });
+
+<span class="nc bnc" id="L306" title="All 2 branches missed.">        changeSubscriptionMenu.setPreCondition(1, () -&gt; !(this.loggedUser.getSubscriptionPlan() instanceof FreePlan));</span>
+<span class="nc bnc" id="L307" title="All 2 branches missed.">        changeSubscriptionMenu.setPreCondition(2, () -&gt; !(this.loggedUser.getSubscriptionPlan() instanceof PremiumBase));</span>
+<span class="nc bnc" id="L308" title="All 2 branches missed.">        changeSubscriptionMenu.setPreCondition(3, () -&gt; !(this.loggedUser.getSubscriptionPlan() instanceof PremiumTop));</span>
+
+<span class="nc" id="L310">        changeSubscriptionMenu.setHandler(1, this::alteraSubscriptionFreePlan);</span>
+<span class="nc" id="L311">        changeSubscriptionMenu.setHandler(2, this::alteraSubscriptionPremiumBasePlan);</span>
+<span class="nc" id="L312">        changeSubscriptionMenu.setHandler(3, this::alteraSubscriptionPremiumTopPlan);</span>
+
+<span class="nc" id="L314">        changeSubscriptionMenu.run();</span>
+<span class="nc" id="L315">    }</span>
+
+    private void showUserEditMenu() {
+<span class="nc" id="L318">        NewMenu userEditMenu = new NewMenu(new String[]{</span>
+                &quot;Change Password&quot;,
+                &quot;Change Email&quot;,
+                &quot;Change Address&quot;
+        });
+
+
+<span class="nc" id="L325">        userEditMenu.setHandler(1, this::changePassword);</span>
+<span class="nc" id="L326">        userEditMenu.setHandler(2, this::changeEmail);</span>
+<span class="nc" id="L327">        userEditMenu.setHandler(3, this::changeAddress);</span>
+<span class="nc" id="L328">        userEditMenu.run();</span>
+<span class="nc" id="L329">    }</span>
+
+
+    private void alteraSubscriptionFreePlan() {
+<span class="nc" id="L333">        FreePlan freePlan = new FreePlan();</span>
+<span class="nc" id="L334">        this.loggedUser.setSubscriptionPlan(freePlan);</span>
+<span class="nc" id="L335">        System.out.println(&quot;Subscription changed to Free Plan.&quot;);</span>
+
+<span class="nc" id="L337">    }</span>
+
+    private void alteraSubscriptionPremiumBasePlan() {
+<span class="nc" id="L340">        PremiumBase premiumBase = new PremiumBase();</span>
+<span class="nc" id="L341">        this.loggedUser.setSubscriptionPlan(premiumBase);</span>
+<span class="nc" id="L342">        System.out.println(&quot;Subscription changed to Premium Base Plan.&quot;);</span>
+
+<span class="nc" id="L344">    }</span>
+
+    private void alteraSubscriptionPremiumTopPlan() {
+<span class="nc" id="L347">        PremiumTop premiumTop = new PremiumTop();</span>
+<span class="nc" id="L348">        this.loggedUser.updatePremiumTop(premiumTop); // Assuming updatePremiumTop handles setting the plan</span>
+<span class="nc" id="L349">        System.out.println(&quot;Subscription changed to Premium Top Plan.&quot;);</span>
+
+<span class="nc" id="L351">    }</span>
+
+    public void createPlaylist() {
+<span class="nc" id="L354">        List&lt;Song&gt; songs = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L355">        scanner.nextLine();</span>
+<span class="nc" id="L356">        System.out.println(&quot;Create New Playlist&quot;);</span>
+        String playlistName;
+<span class="nc" id="L358">        System.out.println(&quot;Enter the name for your new playlist: &quot;);</span>
+<span class="nc" id="L359">        playlistName = scanner.nextLine().trim();</span>
+
+<span class="nc bnc" id="L361" title="All 2 branches missed.">        while (this.modelData.existsPlaylist(playlistName)) {</span>
+<span class="nc" id="L362">            System.out.println(&quot;A playlist with this name already exists. Please choose another name: &quot;);</span>
+<span class="nc" id="L363">            playlistName = scanner.nextLine().trim();</span>
+        }
+
+<span class="nc" id="L366">        System.out.println(&quot;Enter a description for the playlist: &quot;);</span>
+<span class="nc" id="L367">        String playlistDescription = scanner.nextLine().trim();</span>
+        String visibility;
+        do {
+<span class="nc" id="L370">            System.out.println(&quot;Set playlist visibility (private or public): &quot;);</span>
+<span class="nc" id="L371">            visibility = scanner.nextLine().trim().toLowerCase();</span>
+<span class="nc bnc" id="L372" title="All 4 branches missed.">            if (!visibility.equals(&quot;private&quot;) &amp;&amp; !visibility.equals(&quot;public&quot;)) {</span>
+<span class="nc" id="L373">                System.out.println(&quot;Invalid option! Please enter 'private' or 'public'.&quot;);</span>
+            }
+<span class="nc bnc" id="L375" title="All 2 branches missed.">        } while (!visibility.equals(&quot;private&quot;)</span>
+<span class="nc bnc" id="L376" title="All 2 branches missed.">                &amp;&amp; !visibility.equals(&quot;public&quot;));</span>
+
+        int n;
+<span class="nc" id="L379">        System.out.println(&quot;How many songs to add initially?: &quot;);</span>
+        // Input validation for integer
+<span class="nc bnc" id="L381" title="All 2 branches missed.">        while (!scanner.hasNextInt()) {</span>
+<span class="nc" id="L382">            System.out.println(&quot;That's not a valid number. Please enter an integer:&quot;);</span>
+<span class="nc" id="L383">            scanner.next(); // consume the invalid input</span>
+        }
+<span class="nc" id="L385">        n = scanner.nextInt();</span>
+<span class="nc" id="L386">        scanner.nextLine(); // Consume the leftover newline</span>
+
+<span class="nc bnc" id="L388" title="All 2 branches missed.">        while (n &lt;= 0) {</span>
+<span class="nc" id="L389">            System.out.println(&quot;Type a number greater than 0: &quot;);</span>
+<span class="nc bnc" id="L390" title="All 2 branches missed.">            while (!scanner.hasNextInt()) {</span>
+<span class="nc" id="L391">                System.out.println(&quot;That's not a valid number. Please enter an integer:&quot;);</span>
+<span class="nc" id="L392">                scanner.next(); // consume the invalid input</span>
+            }
+<span class="nc" id="L394">            n = scanner.nextInt();</span>
+<span class="nc" id="L395">            scanner.nextLine(); // Consume the leftover newline</span>
+        }
+
+<span class="nc bnc" id="L398" title="All 2 branches missed.">        while (n &gt; 0) {</span>
+            while (true) {
+<span class="nc" id="L400">                System.out.println(&quot;Type the name of the album of the song you want to add to the playlist: &quot;);</span>
+<span class="nc" id="L401">                String nomeAlbum = scanner.nextLine().trim();</span>
+
+                try {
+<span class="nc" id="L404">                    Album album = this.modelData.getAlbum(nomeAlbum);</span>
+<span class="nc" id="L405">                    System.out.println(&quot;Songs in album '&quot; + album.getTitle() + &quot;':&quot;);</span>
+<span class="nc" id="L406">                    album.getSongsCopy().forEach(song -&gt; System.out.println(&quot;- &quot; + song.getName()));</span>
+                    while (true) {
+<span class="nc" id="L408">                        System.out.println(&quot;Type the name of the song you want to add to the playlist: &quot;);</span>
+<span class="nc" id="L409">                        String musicName = scanner.nextLine().trim();</span>
+                        try {
+<span class="nc" id="L411">                            songs.add(this.modelData.getSong(musicName, nomeAlbum));</span>
+<span class="nc" id="L412">                            System.out.println(&quot;Song '&quot; + musicName + &quot;' added to playlist&quot;);</span>
+<span class="nc" id="L413">                            break;</span>
+<span class="nc" id="L414">                        } catch (DoesntExistException e) {</span>
+<span class="nc" id="L415">                            System.out.println(&quot;Incorrect song name, does not exist in album '&quot; + nomeAlbum + &quot;'. Try again.&quot;);</span>
+                        }
+<span class="nc" id="L417">                    }</span>
+<span class="nc" id="L418">                    break;</span>
+
+<span class="nc" id="L420">                } catch (DoesntExistException e) {</span>
+<span class="nc" id="L421">                    System.out.println(&quot;Incorrect album name, does not exist. Try again.&quot;);</span>
+                }
+<span class="nc" id="L423">            }</span>
+<span class="nc" id="L424">            n--;</span>
+        }
+
+<span class="nc" id="L427">        Playlist playlist = new Playlist(this.loggedUser, playlistName, playlistDescription, 0, visibility, songs);</span>
+        try {
+<span class="nc" id="L429">            this.modelData.addPlaylist(playlist);</span>
+<span class="nc" id="L430">            System.out.println(&quot;Playlist '&quot; + playlistName + &quot;' created successfully!&quot;);</span>
+<span class="nc" id="L431">        } catch (AlreadyExistsException e) {</span>
+<span class="nc" id="L432">            System.out.println(&quot;Error: A playlist with that name already exists.&quot;);</span>
+<span class="nc" id="L433">        }</span>
+<span class="nc" id="L434">    }</span>
+
+
+    private void addSongToPlaylist() {
+        String nomePlaylist;
+        Playlist playlist;
+<span class="nc" id="L440">        System.out.println(&quot;Enter the name of the playlist to add a song to: &quot;);</span>
+<span class="nc" id="L441">        scanner.nextLine(); // Consume leftover newline if any</span>
+<span class="nc" id="L442">        nomePlaylist = scanner.nextLine().trim();</span>
+
+<span class="nc bnc" id="L444" title="All 2 branches missed.">        while (!this.modelData.existsPlaylist(nomePlaylist)) {</span>
+<span class="nc" id="L445">            System.out.println(&quot;Playlist does not exist. Enter another name or type 'exit' to cancel: &quot;);</span>
+<span class="nc" id="L446">            nomePlaylist = scanner.nextLine().trim();</span>
+<span class="nc bnc" id="L447" title="All 2 branches missed.">            if (nomePlaylist.equalsIgnoreCase(&quot;exit&quot;)) {</span>
+<span class="nc" id="L448">                System.out.println(&quot;Operation cancelled.&quot;);</span>
+<span class="nc" id="L449">                return;</span>
+            }
+        }
+        try {
+<span class="nc" id="L453">            playlist = this.modelData.getAnyPlaylist(nomePlaylist, loggedUser);</span>
+            // Check if the logged-in user is the creator of the playlist
+<span class="nc bnc" id="L455" title="All 2 branches missed.">            if (!playlist.getCreator().equals(loggedUser)) {</span>
+<span class="nc" id="L456">                System.out.println(&quot;You can only add songs to your own playlists.&quot;);</span>
+<span class="nc" id="L457">                return;</span>
+            }
+<span class="nc" id="L459">        } catch (DoesntExistException e) {</span>
+<span class="nc" id="L460">            System.out.println(&quot;Error: Playlist not found or you do not have permission.&quot;);</span>
+<span class="nc" id="L461">            return;</span>
+<span class="nc" id="L462">        }</span>
+
+
+<span class="nc bnc" id="L465" title="All 2 branches missed.">        if (!loggedUser.getSubscriptionPlan().canCreatePlaylist()) { // Assuming canCreatePlaylist also covers adding songs</span>
+<span class="nc" id="L466">            System.out.println(&quot;Your current subscription plan doesn't allow adding songs to playlists.&quot;);</span>
+<span class="nc" id="L467">            System.out.println(&quot;Please upgrade your subscription to access this feature.&quot;);</span>
+<span class="nc" id="L468">            return;</span>
+        }
+        while (true) {
+<span class="nc" id="L471">            System.out.println(&quot;Enter the name of the album of the song to add:&quot;);</span>
+<span class="nc" id="L472">            String nomeAlbum = scanner.nextLine().trim();</span>
+            try {
+<span class="nc" id="L474">                Album album = this.modelData.getAlbum(nomeAlbum);</span>
+<span class="nc" id="L475">                System.out.println(&quot;Songs in album '&quot; + album.getTitle() + &quot;':&quot;);</span>
+<span class="nc" id="L476">                album.getSongsCopy().forEach(song -&gt; System.out.println(&quot;- &quot; + song.getName()));</span>
+
+                while (true) {
+<span class="nc" id="L479">                    System.out.println(&quot;Choose the song you want to add to the playlist '&quot; + playlist.getPlaylistName() + &quot;':&quot;);</span>
+<span class="nc" id="L480">                    String musicName = scanner.nextLine().trim();</span>
+                    try {
+<span class="nc" id="L482">                        Song added = this.modelData.getSong(musicName, nomeAlbum);</span>
+<span class="nc bnc" id="L483" title="All 2 branches missed.">                        if (playlist.getSongs().contains(added)) {</span>
+<span class="nc" id="L484">                            System.out.println(&quot;Song already in playlist, try again.&quot;);</span>
+                        } else {
+<span class="nc" id="L486">                            playlist.addSong(added);</span>
+<span class="nc" id="L487">                            System.out.println(&quot;Song '&quot; + added.getName() + &quot;' added to playlist '&quot; + playlist.getPlaylistName() + &quot;'.&quot;);</span>
+<span class="nc" id="L488">                            return;</span>
+                        }
+<span class="nc" id="L490">                    } catch (DoesntExistException e) {</span>
+<span class="nc" id="L491">                        System.out.println(&quot;Incorrect song name, does not exist in album '&quot; + nomeAlbum + &quot;'. Try again.&quot;);</span>
+<span class="nc" id="L492">                    } catch (SubscriptionDoesNotAllowException e) {</span>
+<span class="nc" id="L493">                        System.out.println(&quot;Your current subscription plan doesn't allow adding songs to playlists.&quot; + e.getMessage());</span>
+<span class="nc" id="L494">                    }</span>
+<span class="nc" id="L495">                }</span>
+<span class="nc" id="L496">            } catch (DoesntExistException e) {</span>
+<span class="nc" id="L497">                System.out.println(&quot;Incorrect album name, does not exist. Try again.&quot;);</span>
+            }
+<span class="nc" id="L499">        }</span>
+    }
+
+    private void viewUserPlaylists() {
+<span class="nc" id="L503">        System.out.println(&quot;Your Playlists:&quot;);</span>
+<span class="nc" id="L504">        Map&lt;String, Playlist&gt; userPlaylists = this.modelData.getPlaylistMapByCreator(loggedUser);</span>
+<span class="nc bnc" id="L505" title="All 2 branches missed.">        if (userPlaylists.isEmpty()) {</span>
+<span class="nc" id="L506">            System.out.println(&quot;You haven't created any playlists yet.&quot;);</span>
+        } else {
+<span class="nc" id="L508">            userPlaylists.keySet().forEach(System.out::println);</span>
+        }
+<span class="nc" id="L510">        System.out.println(&quot;--- End of Your Playlists ---&quot;);</span>
+<span class="nc" id="L511">    }</span>
+
+    public void deletePlaylist() {
+<span class="nc" id="L514">        System.out.println(&quot;Deleting Playlist&quot;);</span>
+<span class="nc" id="L515">        scanner.nextLine();</span>
+<span class="nc" id="L516">        System.out.print(&quot;Enter the name of the playlist to delete: &quot;);</span>
+<span class="nc" id="L517">        String name = scanner.nextLine().trim();</span>
+
+<span class="nc bnc" id="L519" title="All 2 branches missed.">        if (!modelData.existsPlaylist(name)) {</span>
+<span class="nc" id="L520">            System.out.print(&quot;Playlist not found. Cannot delete.&quot;);</span>
+<span class="nc" id="L521">            return;</span>
+        }
+        try {
+<span class="nc" id="L524">            Playlist playlistToDelete = this.modelData.getPlaylist(name);</span>
+<span class="nc bnc" id="L525" title="All 2 branches missed.">            if (!playlistToDelete.getCreator().equals(this.loggedUser)) {</span>
+<span class="nc" id="L526">                System.out.println(&quot;Error: You can only delete your own playlists.&quot;);</span>
+<span class="nc" id="L527">                return;</span>
+            }
+<span class="nc" id="L529">            this.modelData.removePlaylist(name);</span>
+<span class="nc" id="L530">            System.out.println(&quot;Playlist '&quot; + name + &quot;' deleted successfully!&quot;);</span>
+<span class="nc" id="L531">        } catch (DoesntExistException e) {</span>
+<span class="nc" id="L532">            System.out.println(&quot;Error: Playlist not found or you don't have permission to delete it.&quot;);</span>
+<span class="nc" id="L533">        }</span>
+<span class="nc" id="L534">    }</span>
+
+    public void changePassword() {
+<span class="nc" id="L537">        String loggedUserPassword = this.loggedUser.getPassword();</span>
+<span class="nc" id="L538">        scanner.nextLine();</span>
+
+        String currentPassword;
+        while (true) {
+<span class="nc" id="L542">            System.out.print(&quot;Enter your current password: &quot;);</span>
+<span class="nc" id="L543">            currentPassword = scanner.nextLine().trim();</span>
+<span class="nc bnc" id="L544" title="All 2 branches missed.">            if (currentPassword.equals(loggedUserPassword)) {</span>
+<span class="nc" id="L545">                break;</span>
+            }
+<span class="nc" id="L547">            System.out.println(&quot;Incorrect password. Please try again.&quot;);</span>
+        }
+
+        String newPassword;
+        while (true) {
+<span class="nc" id="L552">            System.out.print(&quot;Enter your new password: &quot;);</span>
+<span class="nc" id="L553">            newPassword = scanner.nextLine().trim();</span>
+
+<span class="nc" id="L555">            System.out.print(&quot;Confirm your new password: &quot;);</span>
+<span class="nc" id="L556">            String confirmPassword = scanner.nextLine().trim();</span>
+
+<span class="nc bnc" id="L558" title="All 2 branches missed.">            if (!newPassword.equals(confirmPassword)) {</span>
+<span class="nc" id="L559">                System.out.println(&quot;Passwords do not match. Please try again.&quot;);</span>
+<span class="nc" id="L560">                continue;</span>
+            }
+
+<span class="nc bnc" id="L563" title="All 2 branches missed.">            if (newPassword.isEmpty()) {</span>
+<span class="nc" id="L564">                System.out.println(&quot;New password cannot be empty. Please try again.&quot;);</span>
+<span class="nc" id="L565">                continue;</span>
+            }
+
+            break;
+        }
+
+<span class="nc" id="L571">        this.loggedUser.setPassword(newPassword);</span>
+<span class="nc" id="L572">        System.out.println(&quot;Your password has been successfully changed.&quot;);</span>
+<span class="nc" id="L573">    }</span>
+
+    public void changeEmail() {
+<span class="nc" id="L576">        String loggedUserEmail = this.loggedUser.getEmail();</span>
+<span class="nc" id="L577">        scanner.nextLine(); // Consume leftover newline</span>
+
+        String currentEmail;
+        while (true) {
+<span class="nc" id="L581">            System.out.print(&quot;Enter your current Email: &quot;);</span>
+<span class="nc" id="L582">            currentEmail = scanner.nextLine().trim();</span>
+<span class="nc bnc" id="L583" title="All 2 branches missed.">            if (currentEmail.equals(loggedUserEmail)) {</span>
+<span class="nc" id="L584">                break;  // correct, exit loop</span>
+            }
+<span class="nc" id="L586">            System.out.println(&quot;Incorrect Email. Please try again.&quot;);</span>
+        }
+
+        String newEmail;
+<span class="nc" id="L590">        System.out.print(&quot;Enter your new Email: &quot;);</span>
+<span class="nc" id="L591">        newEmail = scanner.nextLine().trim();</span>
+<span class="nc bnc" id="L592" title="All 2 branches missed.">        while (!newEmail.contains(&quot;@&quot;)) {</span>
+<span class="nc" id="L593">            System.out.print(&quot;Please enter a valid email address: &quot;);</span>
+<span class="nc" id="L594">            newEmail = scanner.nextLine().trim();</span>
+        }
+
+
+<span class="nc" id="L598">        this.loggedUser.setEmail(newEmail);</span>
+<span class="nc" id="L599">        System.out.println(&quot;Your Email has been successfully changed.&quot;);</span>
+
+<span class="nc" id="L601">    }</span>
+
+    public void changeAddress() {
+<span class="nc" id="L604">        String loggedUserAddress = this.loggedUser.getAddress();</span>
+<span class="nc" id="L605">        scanner.nextLine(); // Consume leftover newline</span>
+
+        String currentAddress;
+        while (true) {
+<span class="nc" id="L609">            System.out.print(&quot;Enter your current Address: &quot;);</span>
+<span class="nc" id="L610">            currentAddress = scanner.nextLine().trim();</span>
+<span class="nc bnc" id="L611" title="All 2 branches missed.">            if (currentAddress.equals(loggedUserAddress)) {</span>
+<span class="nc" id="L612">                break;</span>
+            }
+<span class="nc" id="L614">            System.out.println(&quot;Incorrect Address. Please try again.&quot;);</span>
+        }
+
+        String newAddress;
+<span class="nc" id="L618">        System.out.print(&quot;Enter your new Address: &quot;);</span>
+<span class="nc" id="L619">        newAddress = scanner.nextLine().trim();</span>
+<span class="nc bnc" id="L620" title="All 2 branches missed.">        while (newAddress.isEmpty()) {</span>
+<span class="nc" id="L621">            System.out.print(&quot;Address cannot be empty. Please enter your new address: &quot;);</span>
+<span class="nc" id="L622">            newAddress = scanner.nextLine().trim();</span>
+        }
+
+
+<span class="nc" id="L626">        this.loggedUser.setAddress(newAddress);</span>
+<span class="nc" id="L627">        System.out.println(&quot;Your Address has been successfully changed.&quot;);</span>
+
+<span class="nc" id="L629">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

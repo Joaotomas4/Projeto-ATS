@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Album.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">GrupoTP-37</a> &gt; <a href="index.source.html" class="el_package">org.spotifumtp37.model.album</a> &gt; <span class="el_source">Album.java</span></div><h1>Album.java</h1><pre class="source lang-java linenums">package org.spotifumtp37.model.album;
+
+import org.spotifumtp37.exceptions.SubscriptionDoesNotAllowException;
+import org.spotifumtp37.model.playlist.Playable;
+import org.spotifumtp37.model.user.User;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+/**
+ * Represents a music album containing a collection of songs and associated data.
+ * The album includes details such as title, artist, release year, genre,
+ * and provides functionality to manage the list of songs.
+ * This class implements the Playable interface to support music playback functionality
+ * and Serializable to allow album persistence.
+ */
+public class Album implements Playable, Serializable {
+    private String title;
+    private String artist;
+    private int releaseYear;
+    private String genre;
+    private List&lt;Song&gt; songs;
+    private Song currentSong;
+
+    /**
+     * Default constructor that initializes an empty album.
+     * Creates an album with empty strings for title, artist, and genre,
+     * sets the release year to 0, and initializes an empty song list.
+     */
+<span class="fc" id="L32">    public Album() {</span>
+<span class="fc" id="L33">        this.title = &quot;&quot;;</span>
+<span class="fc" id="L34">        this.artist = &quot;&quot;;</span>
+<span class="fc" id="L35">        this.releaseYear = 0;</span>
+<span class="fc" id="L36">        this.genre = &quot;&quot;;</span>
+<span class="fc" id="L37">        this.songs = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L38">        this.currentSong = new Song();</span>
+<span class="fc" id="L39">    }</span>
+
+    /**
+     * Parameterized constructor to create an album with specific attributes.
+     *
+     * @param title The title of the album
+     * @param artist The name of the artist or band
+     * @param releaseYear The year when the album was released
+     * @param genre The musical genre of the album
+     * @param songs The list of songs included in the album
+     */
+<span class="fc" id="L50">    public Album(String title, String artist, int releaseYear, String genre, List&lt;Song&gt; songs) {</span>
+<span class="fc" id="L51">        this.title = title;</span>
+<span class="fc" id="L52">        this.artist = artist;</span>
+<span class="fc" id="L53">        this.releaseYear = releaseYear;</span>
+<span class="fc" id="L54">        this.genre = genre;</span>
+<span class="fc" id="L55">        this.songs = copySongs(songs);</span>
+<span class="fc" id="L56">        this.currentSong = new Song();</span>
+<span class="fc" id="L57">    }</span>
+
+    /**
+     * Copy constructor that creates a deep copy of another album.
+     *
+     * @param other The album to copy
+     */
+<span class="fc" id="L64">    public Album(Album other) {</span>
+<span class="fc" id="L65">        this.title = other.getTitle();</span>
+<span class="fc" id="L66">        this.artist = other.getArtist();</span>
+<span class="fc" id="L67">        this.releaseYear = other.getReleaseYear();</span>
+<span class="fc" id="L68">        this.genre = other.getGenre();</span>
+<span class="fc" id="L69">        this.songs = copySongs(other.getSongs());</span>
+<span class="fc" id="L70">        this.currentSong = new Song(other.getCurrentSong());</span>
+<span class="fc" id="L71">    }</span>
+
+    /**
+     * Creates a deep copy of a list of songs.
+     *
+     * @param songs The list of songs to copy
+     * @return A new list containing clones of the original songs
+     */
+    public List&lt;Song&gt; copySongs(List&lt;Song&gt; songs) {
+<span class="fc" id="L80">        List&lt;Song&gt; copy = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        for (Song song : songs) {</span>
+<span class="fc" id="L82">            copy.add(song.clone());</span>
+<span class="fc" id="L83">        }</span>
+<span class="fc" id="L84">        return copy;</span>
+    }
+
+    /**
+     * Adds a new song to the album with the specified attributes.
+     * The method creates an appropriate song type (regular, explicit, or multimedia)
+     * based on the provided parameters.
+     *
+     * @param name The name of the song
+     * @param publisher The publisher of the song
+     * @param lyrics The lyrics of the song
+     * @param musicalNotes The musical notes of the song
+     * @param genre The genre of the song
+     * @param durationInSeconds The duration of the song in seconds
+     * @param isExplicit Whether the song contains explicit content
+     * @param isMultimedia Whether the song is a multimedia song with video
+     * @param videoLink The link to the video for multimedia songs
+     * @throws IllegalArgumentException If the song name is empty, duration is not positive,
+     *         or a song with the same name already exists in the album
+     */
+    public void addSong(String name, String publisher, String lyrics, String musicalNotes, String genre,
+                        int durationInSeconds, boolean isExplicit, boolean isMultimedia, String videoLink) {
+<span class="pc bpc" id="L106" title="1 of 4 branches missed.">        if (name == null || name.isEmpty()) {</span>
+<span class="fc" id="L107">            throw new IllegalArgumentException(&quot;Song name cannot be null or empty.&quot;);</span>
+        }
+<span class="fc bfc" id="L109" title="All 2 branches covered.">        if (durationInSeconds &lt;= 0) {</span>
+<span class="fc" id="L110">            throw new IllegalArgumentException(&quot;Song duration must be positive.&quot;);</span>
+        }
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (songs.stream().anyMatch(song -&gt; song.getName().equalsIgnoreCase(name))) {</span>
+<span class="fc" id="L113">            throw new IllegalArgumentException(&quot;A song with the same name already exists in the album.&quot;);</span>
+        }
+
+        Song song;
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        if (isExplicit) {</span>
+<span class="fc" id="L118">            song = new ExplicitSong(name, this.artist, publisher, lyrics, musicalNotes, genre, durationInSeconds);</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">        } else if (isMultimedia) {</span>
+<span class="fc" id="L120">            song = new MultimediaSong(name, this.artist, publisher, lyrics, musicalNotes, genre, durationInSeconds, videoLink);</span>
+        } else
+<span class="fc" id="L122">            song = new Song(name, this.artist, publisher, lyrics, musicalNotes, genre, durationInSeconds);</span>
+<span class="fc" id="L123">        songs.add(song);</span>
+<span class="fc" id="L124">    }</span>
+
+    /**
+     * Removes a song from the album by name.
+     *
+     * @param name The name of the song to delete
+     * @return true if a song was found and removed, false otherwise
+     */
+    public boolean deleteSong(String name) {
+<span class="fc" id="L133">        return songs.removeIf(song -&gt; song.getName().equals(name));</span>
+    }
+
+    /**
+     * Returns a deep copy of the album's songs.
+     *
+     * @return A new list containing clones of the songs on the album
+     */
+    public List&lt;Song&gt; getSongsCopy() {
+<span class="fc" id="L142">        List&lt;Song&gt; copy = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        for (Song song : this.songs) {</span>
+<span class="fc" id="L144">            copy.add(song.clone());</span>
+<span class="fc" id="L145">        }</span>
+<span class="fc" id="L146">        return copy;</span>
+    }
+
+    /**
+     * Returns a shallow copy of the album's songs.
+     * The returned list contains references to the original songs, not copies.
+     *
+     * @return A new list containing references to the songs on the album
+     */
+    public List&lt;Song&gt; getSongs() {
+<span class="fc" id="L156">        return new ArrayList&lt;&gt;(this.songs);</span>
+    }
+
+    /**
+     * Gets the title of the album.
+     *
+     * @return The album title
+     */
+    public String getTitle() {
+<span class="fc" id="L165">        return title;</span>
+    }
+
+    /**
+     * Sets the current song to a random song from the album.
+     */
+    public void setCurrentSong() {
+<span class="nc" id="L172">        Random rand = new Random();</span>
+<span class="nc" id="L173">        int randomIndex = rand.nextInt(songs.size());</span>
+<span class="nc" id="L174">        this.currentSong = songs.get(randomIndex);</span>
+<span class="nc" id="L175">    }</span>
+
+    /**
+     * Sets the title of the album.
+     *
+     * @param title The new album title
+     */
+    public void setTitle(String title) {
+<span class="fc" id="L183">        this.title = title;</span>
+<span class="fc" id="L184">    }</span>
+
+    /**
+     * Gets the artist name.
+     *
+     * @return The name of the artist or band
+     */
+    public String getArtist() {
+<span class="fc" id="L192">        return artist;</span>
+    }
+
+    /**
+     * Sets the artist name.
+     *
+     * @param artist The new artist or band name
+     */
+    public void setArtist(String artist) {
+<span class="fc" id="L201">        this.artist = artist;</span>
+<span class="fc" id="L202">    }</span>
+
+    /**
+     * Sets the release year of the album.
+     *
+     * @param releaseYear The year when the album was released
+     */
+    public void setReleaseYear(int releaseYear) {
+<span class="fc" id="L210">        this.releaseYear = releaseYear;</span>
+<span class="fc" id="L211">    }</span>
+
+    /**
+     * Sets the genre of the album.
+     *
+     * @param genre The new musical genre
+     */
+    public void setGenre(String genre) {
+<span class="fc" id="L219">        this.genre = genre;</span>
+<span class="fc" id="L220">    }</span>
+
+    /**
+     * Gets the release year of the album.
+     *
+     * @return The year when the album was released
+     */
+    public int getReleaseYear() {
+<span class="fc" id="L228">        return releaseYear;</span>
+    }
+
+    /**
+     * Gets the genre of the album.
+     *
+     * @return The musical genre
+     */
+    public String getGenre() {
+<span class="fc" id="L237">        return genre;</span>
+    }
+
+    /**
+     * Calculates the total duration of all songs on the album.
+     *
+     * @return The total duration in seconds
+     */
+    public int getTotalDuration() {
+<span class="fc" id="L246">        return songs.stream().mapToInt(Song::getDurationInSeconds).sum();</span>
+    }
+
+    /**
+     * Gets the currently selected song.
+     *
+     * @return The current song
+     */
+    public Song getCurrentSong() {
+<span class="fc" id="L255">        return currentSong;</span>
+    }
+
+    /**
+     * Sets the currently selected song.
+     *
+     * @param currentSong The song to set as current
+     */
+    public void setCurrentSong(Song currentSong) {
+<span class="fc" id="L264">        this.currentSong = currentSong;</span>
+<span class="fc" id="L265">    }</span>
+
+    /**
+     * Moves to the next song in the album, based on the user's subscription plan.
+     * For users with appropriate subscription, moves to the next sequential song.
+     * For users without proper subscription, selects a random song.
+     *
+     * @param user The user who is playing the album
+     */
+    @Override
+    public void next(User user) {
+<span class="fc bfc" id="L276" title="All 2 branches covered.">        if (user.getSubscriptionPlan().canBrowsePlaylist()) {</span>
+<span class="fc" id="L277">            int index = songs.indexOf(currentSong);</span>
+<span class="fc" id="L278">            int nextIndex = (index + 1) % songs.size();</span>
+<span class="fc" id="L279">            currentSong = songs.get(nextIndex);</span>
+<span class="fc" id="L280">        } else {</span>
+<span class="pc bpc" id="L281" title="1 of 2 branches missed.">            if (songs.size() == 1) return;</span>
+<span class="fc" id="L282">            Random rand = new Random();</span>
+<span class="fc" id="L283">            int currentIndex = songs.indexOf(currentSong);</span>
+            int randomIndex;
+            do {
+<span class="fc" id="L286">                randomIndex = rand.nextInt(songs.size());</span>
+<span class="fc bfc" id="L287" title="All 2 branches covered.">            } while (randomIndex == currentIndex);</span>
+<span class="fc" id="L288">            currentSong = songs.get(randomIndex);</span>
+        }
+<span class="fc" id="L290">    }</span>
+
+    /**
+     * Selects a random song different from the current one.
+     * If there's only one song on the album, no change occurs.
+     */
+    public void nextShuffle() {
+<span class="nc bnc" id="L297" title="All 2 branches missed.">        if (songs.size() == 1) return;</span>
+<span class="nc" id="L298">        Random rand = new Random();</span>
+<span class="nc" id="L299">        int currentIndex = songs.indexOf(currentSong);</span>
+        int randomIndex;
+        do {
+<span class="nc" id="L302">            randomIndex = rand.nextInt(songs.size());</span>
+<span class="nc bnc" id="L303" title="All 2 branches missed.">        } while (randomIndex == currentIndex);</span>
+<span class="nc" id="L304">        currentSong = songs.get(randomIndex);</span>
+<span class="nc" id="L305">    }</span>
+
+    /**
+     * Moves to the previous song on the album if the user's subscription allows it.
+     *
+     * @param user The user who is playing the album
+     * @throws SubscriptionDoesNotAllowException If the user's subscription does not allow
+     *         navigating to previous songs
+     */
+    @Override
+    public void previous(User user) throws SubscriptionDoesNotAllowException {
+<span class="fc bfc" id="L316" title="All 2 branches covered.">        if (user.getSubscriptionPlan().canBrowsePlaylist()) {</span>
+<span class="fc" id="L317">            int index = songs.indexOf(currentSong);</span>
+<span class="fc" id="L318">            int prevIndex = (index - 1 + songs.size()) % songs.size();</span>
+<span class="fc" id="L319">            currentSong = songs.get(prevIndex);</span>
+<span class="fc" id="L320">        } else {</span>
+<span class="fc" id="L321">            throw new SubscriptionDoesNotAllowException(&quot;Your subscription does not allow going back in the playlist.&quot;);</span>
+        }
+<span class="fc" id="L323">    }</span>
+
+    /**
+     * Plays the current song, increments its play count, and updates the user's
+     * points and listening history.
+     *
+     * @param user The user who is playing the song
+     */
+    @Override
+    public void play(User user) {
+<span class="fc" id="L333">        this.currentSong.incrementTimesPlayed();</span>
+<span class="fc" id="L334">        user.addPoints();</span>
+<span class="fc" id="L335">        user.updateHistory(this.currentSong);</span>
+<span class="fc" id="L336">    }</span>
+
+    /**
+     * Creates and returns a deep copy of this album.
+     *
+     * @return A new Album instance that is a copy of this album
+     */
+    @Override
+    public Album clone() {
+<span class="fc" id="L345">        return new Album(this);</span>
+    }
+
+    /**
+     * Returns a string representation of the album.
+     *
+     * @return A string containing the album's title, artist, release year, genre,
+     *         songs, and current song
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L356">        return &quot;Album{&quot; +</span>
+                &quot;title='&quot; + title + '\'' +
+                &quot;, artist='&quot; + artist + '\'' +
+                &quot;, releaseYear=&quot; + releaseYear +
+                &quot;, genre='&quot; + genre + '\'' +
+                &quot;, songs=&quot; + songs +
+                &quot;, currentSong=&quot; + currentSong +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

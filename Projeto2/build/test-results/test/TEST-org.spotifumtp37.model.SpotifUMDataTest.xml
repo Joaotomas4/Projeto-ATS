@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.spotifumtp37.model.SpotifUMDataTest" tests="50" skipped="0" failures="0" errors="0" timestamp="2026-04-20T11:27:50" hostname="joao-ASUS-TUF-Dash-F15-FX517ZE-FX517ZE" time="0.094">
+  <properties/>
+  <testcase name="existsPlaylistReturnsTrueWhenPresent()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.022"/>
+  <testcase name="existsPlaylistReturnsFalseWhenAbsent()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="getCurrentUserPointerReturnsReference()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.004"/>
+  <testcase name="toStringContainsAlbumsUsersPlaylists()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="getMapAlbumsReturnsCopy()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="cloneReturnsDifferentButEqualObject()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.002"/>
+  <testcase name="removeUserSuccessfully()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="equalsReturnsTrueForSameReference()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.0"/>
+  <testcase name="addAlbumSuccessfully()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.0"/>
+  <testcase name="removePlaylistSuccessfully()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.0"/>
+  <testcase name="existsUserReturnsTrueWhenPresent()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="existsUserReturnsFalseWhenAbsent()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="getPlaylistMapByCreatorReturnsEmptyForUnknownUser()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.002"/>
+  <testcase name="addUserSuccessfully()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.002"/>
+  <testcase name="getMapPlaylistsReturnsCopy()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="existsSongReturnsFalseForWrongAlbum()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.0"/>
+  <testcase name="getAlbumReturnsCorrectAlbum()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="getMapUsersReturnsCopy()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="addPlaylistSuccessfully()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="getUserReturnsCorrectUser()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.0"/>
+  <testcase name="setMapPlaylistsReplacesContent()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="addUserThrowsWhenDuplicate()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="existsAlbumReturnsTrueWhenPresent()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="existsAlbumReturnsFalseWhenAbsent()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="getSongReturnsCorrectSong()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="getUserThrowsWhenNotFound()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="getAnyPlaylistReturnsPublicPlaylist()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="getSongThrowsWhenNotFound()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="removeAlbumSuccessfully()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="getPlaylistMapByCreatorReturnsCorrectPlaylists()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="getPlaylistThrowsWhenNotFound()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="equalsReturnsFalseForDifferentContent()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="removeUserThrowsWhenNotFound()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.0"/>
+  <testcase name="getMapAlbumsCopyReturnsCopy()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.0"/>
+  <testcase name="getPlaylistReturnsCorrectPlaylist()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="removePlaylistThrowsWhenNotFound()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.002"/>
+  <testcase name="addAlbumThrowsWhenDuplicate()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="getAnyPlaylistThrowsForPrivatePlaylistFromOtherUser()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="removeAlbumThrowsWhenNotFound()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="equalsReturnsTrueForSameContent()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.0"/>
+  <testcase name="defaultConstructorCreatesEmptyData()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="copyConstructorCreatesDeepCopy()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="setMapUsersReplacesContent()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.0"/>
+  <testcase name="existsSongReturnsTrueWhenPresent()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="getCurrentUserPointerReturnsNullForMissing()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.002"/>
+  <testcase name="getAlbumThrowsWhenNotFound()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="equalsReturnsFalseForNull()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="addPlaylistThrowsWhenDuplicate()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="existsSongReturnsFalseForWrongSong()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <testcase name="setMapAlbumsReplacesContent()" classname="org.spotifumtp37.model.SpotifUMDataTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
